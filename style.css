@@ -1,0 +1,152 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: #f4f9fc;
+  color: #1f2937;
+}
+
+/* NAV */
+.nav {
+  padding: 15px 30px;
+  display: flex;
+  justify-content: space-between;
+  background: white;
+}
+
+.btn-outline {
+  border: 2px solid #3b82f6;
+  background: none;
+  color: #3b82f6;
+  padding: 8px 16px;
+  border-radius: 20px;
+}
+
+/* HERO */
+.hero {
+  display: flex;
+  flex-direction: column;
+  padding: 40px 20px;
+  background: linear-gradient(135deg, #dbeafe, #eef6ff);
+}
+
+.hero-left h1 {
+  font-size: 32px;
+}
+
+.search-box {
+  display: flex;
+  gap: 10px;
+  background: white;
+  padding: 12px;
+  border-radius: 20px;
+  margin: 20px 0;
+}
+
+.search-box select,
+.search-box input {
+  border: none;
+  outline: none;
+  padding: 8px;
+}
+
+/* UPLOAD */
+.upload-box {
+  background: white;
+  padding: 15px;
+  border-radius: 14px;
+  margin-bottom: 15px;
+}
+
+.upload-box small {
+  color: #64748b;
+}
+
+/* BUTTON */
+.primary-btn {
+  background: #2563eb;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 25px;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+/* STATS */
+.stats {
+  display: flex;
+  gap: 25px;
+}
+
+.stats strong {
+  display: block;
+  font-size: 18px;
+}
+
+/* IMAGE */
+.hero-right img {
+  max-width: 350px;
+  border-radius: 20px;
+  margin-top: 30px;
+}
+
+/* INFO */
+.info-section {
+  padding: 40px 20px;
+}
+
+.info-grid {
+  display: grid;
+  gap: 20px;
+}
+
+.info-card {
+  background: white;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+}
+
+/* TESTS */
+.tests-section {
+  padding: 40px 20px;
+  background: #eaf4ff;
+}
+
+.test-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.test-card {
+  background: white;
+  padding: 12px;
+  border-radius: 12px;
+}
+
+/* FOOTER */
+footer {
+  text-align: center;
+  padding: 20px;
+  color: #64748b;
+}
+
+/* DESKTOP */
+@media (min-width: 900px) {
+  .hero {
+    flex-direction: row;
+    padding: 60px;
+    justify-content: space-between;
+  }
+
+  .info-grid,
+  .test-grid {
+    grid-template-columns: repeat(3, 1fr);
+    max-width: 1100px;
+    margin: auto;
+  }
+}
