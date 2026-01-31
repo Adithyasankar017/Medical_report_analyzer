@@ -28,6 +28,11 @@ body {
   border: 1px solid #cbd5e1;
 }
 
+.nav-location select:disabled {
+  background-color: #f1f5f9;
+  cursor: not-allowed;
+}
+
 /* HERO */
 .hero {
   display: flex;

@@ -15,20 +15,17 @@
 
   <!-- LOCATION SELECTION -->
   <div class="nav-location">
-    <select>
-      <option>Select City</option>
-      <option>Kochi</option>
-      <option>Trivandrum</option>
-      <option>Thrissur</option>
-    </select>
+  <select id="citySelect">
+    <option value="">Select City</option>
+    <option value="trivandrum">Trivandrum</option>
+    <option value="kochi">Kochi</option>
+    <option value="thrissur">Thrissur</option>
+  </select>
 
-    <select>
-      <option>Select Area</option>
-      <option>Kakkanad</option>
-      <option>Edappally</option>
-      <option>Vyttila</option>
-    </select>
-  </div>
+  <select id="areaSelect" disabled>
+    <option value="">Select Area</option>
+  </select>
+</div>
 </nav>
 
 <!-- HERO SECTION -->
@@ -102,6 +99,34 @@
 <footer>
   © 2026 Medical Report Analyzer · Educational Purpose
 </footer>
+<script>
+  const citySelect = document.getElementById("citySelect");
+  const areaSelect = document.getElementById("areaSelect");
+
+  const cityAreaMap = {
+    trivandrum: ["Kazhakoottam", "Pattom", "Kowdiar", "Vattiyoorkavu"],
+    kochi: ["Kakkanad", "Edappally", "Vyttila", "Aluva"],
+    thrissur: ["Punkunnam", "Ollur", "Irinjalakuda", "Guruvayur"]
+  };
+
+  citySelect.addEventListener("change", function () {
+    const selectedCity = this.value;
+
+    // Reset area dropdown
+    areaSelect.innerHTML = '<option value="">Select Area</option>';
+    areaSelect.disabled = true;
+
+    if (selectedCity && cityAreaMap[selectedCity]) {
+      cityAreaMap[selectedCity].forEach(area => {
+        const option = document.createElement("option");
+        option.value = area.toLowerCase();
+        option.textContent = area;
+        areaSelect.appendChild(option);
+      });
+      areaSelect.disabled = false;
+    }
+  });
+</script>
 
 </body>
 </html>
