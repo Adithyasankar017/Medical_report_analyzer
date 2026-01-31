@@ -1,120 +1,107 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Medical Report Analyzer</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
 
-<!-- NAVBAR -->
-<nav class="nav">
-  <h3>Medical Report Analyzer</h3>
+  <!-- ================= HEADER ================= -->
+  <header class="top-bar">
+    <h1>Medical Report Analyzer</h1>
 
-  <!-- LOCATION SELECTION -->
-  <div class="nav-location">
-  <select id="citySelect">
-    <option value="">Select City</option>
-    <option value="trivandrum">Trivandrum</option>
-    <option value="kochi">Kochi</option>
-    <option value="thrissur">Thrissur</option>
-  </select>
-
-  <select id="areaSelect" disabled>
-    <option value="">Select Area</option>
-  </select>
-</div>
-</nav>
-
-<!-- HERO SECTION -->
-<section class="hero">
-  <div class="hero-left">
-    <h1>Understand Medical Reports<br>with Confidence</h1>
-
-    <p>
-      Upload your medical report and get a simple, human-friendly explanation
-      before visiting a doctor.
-    </p>
-
-    <!-- LANGUAGE -->
-    <div class="language-box">
-      <select>
-        <option>Language</option>
-        <option>English</option>
-        <option>Malayalam</option>
+    <!-- City selection moved to top-right -->
+    <div class="location-select">
+      <select id="citySelect">
+        <option value="">Select City</option>
+        <option value="Trivandrum">Trivandrum</option>
+        <option value="Kochi">Kochi</option>
       </select>
     </div>
+  </header>
 
-    <!-- UPLOAD -->
-    <div class="upload-box">
-      <label>Upload Medical Report</label>
-      <input type="file" accept=".pdf,.jpg,.jpeg,.png">
-      <small>Supported formats: PDF, JPG, PNG</small>
+  <!-- ================= HERO SECTION ================= -->
+  <section class="hero">
+    <div class="hero-left">
+      <h2>Understand Medical Reports<br>with Confidence</h2>
+
+      <p>
+        Upload your medical report and get a simple, human-friendly explanation
+        before visiting a doctor.
+      </p>
+
+      <!-- Language -->
+      <select id="languageSelect">
+        <option value="en">English</option>
+        <option value="ml">Malayalam</option>
+      </select>
+
+      <!-- Upload -->
+      <div class="upload-box">
+        <label>
+          Upload Medical Report
+          <input type="file" id="reportFile" accept=".pdf,.jpg,.png" />
+        </label>
+        <small>Supported formats: PDF, JPG, PNG</small>
+      </div>
+
+      <!-- Analyze -->
+      <button class="primary-btn" onclick="saveCityAndProceed()">
+        Analyze Report
+      </button>
+
+      <!-- Stats -->
+      <div class="stats">
+        <div><strong>100+</strong><br>Tests Explained</div>
+        <div><strong>Live</strong><br>Hospital Data</div>
+        <div><strong>Malayalam</strong><br>Support</div>
+      </div>
     </div>
 
-    <button class="primary-btn" onclick="saveLocation()">Analyze Report</button>
-
-    <!-- STATS -->
-    <div class="stats">
-      <div><strong>100+</strong><span>Tests Explained</span></div>
-      <div><strong>Live</strong><span>Hospital Data</span></div>
-      <div><strong>Malayalam</strong><span>Support</span></div>
+    <div class="hero-right">
+      <img src="images/hero-doctor.jpg" alt="Doctor Image" />
     </div>
-  </div>
+  </section>
 
-  <div class="hero-right">
-    <img src=""C:\Users\Admin\Downloads\doctors.jpg"">
-  </div>
-</section>
+  <!-- ================= INFO BUTTONS ================= -->
+  <section class="info-buttons">
+    <a href="doctors.html" class="info-card">Doctors</a>
+    <a href="hospitals.html" class="info-card">Hospitals</a>
+    <a href="labs.html" class="info-card">Laboratories</a>
+    <a href="tests.html" class="info-card">Medical Tests</a>
+  </section>
 
-<!-- CATEGORY BUTTONS -->
-<section class="category-section">
-  <h2>Healthcare Information Near You</h2>
+  <!-- ================= FOOTER ================= -->
+  <footer>
+    © 2026 Medical Report Analyzer • Educational Purpose
+  </footer>
 
-  <div class="category-grid">
-    <a href="doctors.html" class="category-card">
-      <h3>Doctors</h3>
-      <p>Find specialists near you</p>
-    </a>
+  <!-- ================= JS FILES ================= -->
+  <!-- City data files -->
+  <script src="js/data-trivandrum.js"></script>
+  <script src="js/data-kochi.js"></script>
 
-    <a href="hospitals.html" class="category-card">
-      <h3>Hospitals</h3>
-      <p>Multi-speciality & emergency care</p>
-    </a>
+  <!-- Main script -->
+  <script src="js/script.js"></script>
 
-    <a href="labs.html" class="category-card">
-      <h3>Laboratories</h3>
-      <p>Tests & diagnostics</p>
-    </a>
+  <!-- ================= INLINE LOGIC ================= -->
+  <script>
+    function saveCityAndProceed() {
+      const city = document.getElementById("citySelect").value;
 
-    <a href="tests.html" class="category-card">
-      <h3>Medical Tests</h3>
-      <p>Test details & price range</p>
-    </a>
-  </div>
-</section>
+      if (!city) {
+        alert("Please select a city");
+        return;
+      }
 
-<footer>
-  © 2026 Medical Report Analyzer · Educational Purpose
-</footer>
-<script>
-  function saveLocation() {
-    const city = document.getElementById("citySelect").value;
-    const area = document.getElementById("areaSelect").value;
-
-    if (!city || !area) {
-      alert("Please select both city and area");
-      return;
+      localStorage.setItem("selectedCity", city);
+      alert("City saved! You can now view doctors, hospitals, labs or tests.");
     }
-
-    localStorage.setItem("selectedCity", city);
-    localStorage.setItem("selectedArea", area);
-
-    alert("Location saved. You can now browse doctors, hospitals or labs.");
-  }
-</script>
+  </script>
 
 </body>
 </html>
