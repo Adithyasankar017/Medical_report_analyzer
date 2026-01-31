@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Medical Report Analyzer</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
@@ -12,10 +12,26 @@
 <!-- NAVBAR -->
 <nav class="nav">
   <h3>Medical Report Analyzer</h3>
-  <button class="btn-outline">Analyze Report</button>
+
+  <!-- LOCATION SELECTION -->
+  <div class="nav-location">
+    <select>
+      <option>Select City</option>
+      <option>Kochi</option>
+      <option>Trivandrum</option>
+      <option>Thrissur</option>
+    </select>
+
+    <select>
+      <option>Select Area</option>
+      <option>Kakkanad</option>
+      <option>Edappally</option>
+      <option>Vyttila</option>
+    </select>
+  </div>
 </nav>
 
-<!-- HERO -->
+<!-- HERO SECTION -->
 <section class="hero">
   <div class="hero-left">
     <h1>Understand Medical Reports<br>with Confidence</h1>
@@ -25,17 +41,8 @@
       before visiting a doctor.
     </p>
 
-    <!-- LOCATION + LANGUAGE -->
-    <div class="search-box">
-      <select>
-        <option>Select City</option>
-        <option>Kochi</option>
-        <option>Trivandrum</option>
-        <option>Thrissur</option>
-      </select>
-
-      <input type="text" placeholder="Enter area">
-
+    <!-- LANGUAGE -->
+    <div class="language-box">
       <select>
         <option>Language</option>
         <option>English</option>
@@ -65,68 +72,35 @@
   </div>
 </section>
 
-<!-- INFO SECTIONS -->
-<section class="info-section">
-
+<!-- CATEGORY BUTTONS -->
+<section class="category-section">
   <h2>Healthcare Information Near You</h2>
 
-  <div class="info-grid">
+  <div class="category-grid">
+    <a href="doctors.html" class="category-card">
+      <h3>Doctors</h3>
+      <p>Find specialists near you</p>
+    </a>
 
-    <div class="info-card">
-      <h4>Doctors</h4>
-      <ul>
-        <li>General Physician</li>
-        <li>Cardiologist</li>
-        <li>Diabetologist</li>
-        <li>Pediatrician</li>
-        <li>Orthopedic</li>
-      </ul>
-    </div>
+    <a href="hospitals.html" class="category-card">
+      <h3>Hospitals</h3>
+      <p>Multi-speciality & emergency care</p>
+    </a>
 
-    <div class="info-card">
-      <h4>Hospitals</h4>
-      <ul>
-        <li>Multi-speciality Hospital</li>
-        <li>Government Hospital</li>
-        <li>Private Clinic</li>
-        <li>Emergency Center</li>
-        <li>Specialty Hospital</li>
-      </ul>
-    </div>
+    <a href="labs.html" class="category-card">
+      <h3>Laboratories</h3>
+      <p>Tests & diagnostics</p>
+    </a>
 
-    <div class="info-card">
-      <h4>Laboratories</h4>
-      <ul>
-        <li>Blood Test Labs</li>
-        <li>Diagnostic Centers</li>
-        <li>Scan & Imaging Labs</li>
-        <li>Pathology Labs</li>
-        <li>Home Sample Collection</li>
-      </ul>
-    </div>
-
+    <a href="tests.html" class="category-card">
+      <h3>Medical Tests</h3>
+      <p>Test details & price range</p>
+    </a>
   </div>
 </section>
 
-<!-- TESTS -->
-<section class="tests-section">
-  <h2>Common Medical Tests & Approximate Prices</h2>
-
-  <div class="test-grid">
-    <div class="test-card">Complete Blood Count (₹300 – ₹600)</div>
-    <div class="test-card">Blood Sugar (₹100 – ₹250)</div>
-    <div class="test-card">Lipid Profile (₹700 – ₹1500)</div>
-    <div class="test-card">Thyroid Test (₹400 – ₹800)</div>
-    <div class="test-card">Urine Routine (₹150 – ₹300)</div>
-    <div class="test-card">ECG (₹200 – ₹500)</div>
-    <div class="test-card">X-Ray (₹300 – ₹800)</div>
-    <div class="test-card">Vitamin D (₹800 – ₹2000)</div>
-  </div>
-</section>
-
-<!-- FOOTER -->
 <footer>
-  <p>© 2026 Medical Report Analyzer • Educational Purpose</p>
+  © 2026 Medical Report Analyzer · Educational Purpose
 </footer>
 
 </body>

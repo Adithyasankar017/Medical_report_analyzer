@@ -1,172 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Medical Tests & Prices (India)</title>
-
-  <!-- Google Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-
-  <!-- Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-
-  <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: #f4f9ff;
-      margin: 0;
-      padding: 0;
-    }
-
-    header {
-      background: linear-gradient(135deg, #0f62fe, #42a5f5);
-      color: white;
-      padding: 20px;
-      text-align: center;
-    }
-
-    header h1 {
-      margin: 0;
-      font-size: 22px;
-    }
-
-    header p {
-      font-size: 14px;
-      opacity: 0.9;
-    }
-
-    .container {
-      padding: 15px;
-      max-width: 1100px;
-      margin: auto;
-    }
-
-    .note {
-      background: #fff3cd;
-      color: #856404;
-      padding: 12px;
-      border-radius: 8px;
-      margin-bottom: 15px;
-      font-size: 13px;
-    }
-
-    .tests-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 15px;
-    }
-
-    .test-card {
-      background: white;
-      border-radius: 12px;
-      padding: 15px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-      transition: transform 0.3s;
-    }
-
-    .test-card:hover {
-      transform: translateY(-5px);
-    }
-
-    .test-card h3 {
-      font-size: 16px;
-      margin: 0 0 5px;
-      color: #0f62fe;
-    }
-
-    .test-card p {
-      font-size: 13px;
-      color: #555;
-      margin: 5px 0;
-    }
-
-    .price {
-      font-weight: 600;
-      color: #2e7d32;
-      margin-top: 8px;
-    }
-
-    footer {
-      text-align: center;
-      padding: 15px;
-      font-size: 12px;
-      color: #666;
-    }
-  </style>
+  <title>Medical Tests</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<header>
-  <h1><i class="fa-solid fa-vial"></i> Medical Tests & Price List</h1>
-  <p>Common diagnostic tests available in India (Approximate Prices)</p>
-</header>
+<section class="list-page">
+  <h2>Medical Tests & Approximate Prices</h2>
 
-<div class="container">
+  <div class="list-card">Complete Blood Count – ₹300 to ₹600</div>
+  <div class="list-card">Blood Sugar – ₹100 to ₹250</div>
+  <div class="list-card">Lipid Profile – ₹700 to ₹1500</div>
+  <div class="list-card">Thyroid Test – ₹400 to ₹800</div>
+  <div class="list-card">Urine Routine – ₹150 to ₹300</div>
+  <div class="list-card">ECG – ₹200 to ₹500</div>
+  <div class="list-card">Vitamin D – ₹800 to ₹2000</div>
 
-  <div class="note">
-    ⚠️ Prices shown are approximate and may vary based on city, lab, and hospital.
-  </div>
-
-  <div class="tests-grid">
-
-    <!-- BLOOD TESTS -->
-    <div class="test-card"><h3>CBC (Complete Blood Count)</h3><p>Checks overall blood health</p><div class="price">₹300 – ₹600</div></div>
-    <div class="test-card"><h3>ESR</h3><p>Detects inflammation</p><div class="price">₹100 – ₹300</div></div>
-    <div class="test-card"><h3>HbA1c</h3><p>Average blood sugar (3 months)</p><div class="price">₹400 – ₹800</div></div>
-    <div class="test-card"><h3>Blood Sugar (Fasting)</h3><p>Diabetes screening</p><div class="price">₹70 – ₹150</div></div>
-    <div class="test-card"><h3>Blood Sugar (PP)</h3><p>Post-meal sugar level</p><div class="price">₹80 – ₹150</div></div>
-
-    <!-- LIVER -->
-    <div class="test-card"><h3>LFT</h3><p>Liver health check</p><div class="price">₹500 – ₹1,200</div></div>
-    <div class="test-card"><h3>SGOT (AST)</h3><p>Liver enzyme test</p><div class="price">₹200 – ₹500</div></div>
-    <div class="test-card"><h3>SGPT (ALT)</h3><p>Liver enzyme test</p><div class="price">₹200 – ₹500</div></div>
-    <div class="test-card"><h3>Bilirubin</h3><p>Jaundice assessment</p><div class="price">₹150 – ₹400</div></div>
-
-    <!-- KIDNEY -->
-    <div class="test-card"><h3>KFT</h3><p>Kidney function check</p><div class="price">₹500 – ₹1,200</div></div>
-    <div class="test-card"><h3>Creatinine</h3><p>Kidney efficiency</p><div class="price">₹150 – ₹300</div></div>
-    <div class="test-card"><h3>Urea</h3><p>Kidney waste level</p><div class="price">₹120 – ₹250</div></div>
-
-    <!-- LIPID -->
-    <div class="test-card"><h3>Lipid Profile</h3><p>Cholesterol levels</p><div class="price">₹400 – ₹900</div></div>
-    <div class="test-card"><h3>Total Cholesterol</h3><p>Heart risk indicator</p><div class="price">₹150 – ₹300</div></div>
-    <div class="test-card"><h3>Triglycerides</h3><p>Fat in blood</p><div class="price">₹150 – ₹300</div></div>
-
-    <!-- THYROID -->
-    <div class="test-card"><h3>TSH</h3><p>Thyroid hormone check</p><div class="price">₹250 – ₹500</div></div>
-    <div class="test-card"><h3>T3</h3><p>Thyroid hormone</p><div class="price">₹250 – ₹500</div></div>
-    <div class="test-card"><h3>T4</h3><p>Thyroid hormone</p><div class="price">₹250 – ₹500</div></div>
-
-    <!-- URINE -->
-    <div class="test-card"><h3>Urine Routine</h3><p>Urinary infection check</p><div class="price">₹100 – ₹250</div></div>
-    <div class="test-card"><h3>Urine Culture</h3><p>Bacterial infection</p><div class="price">₹600 – ₹1,200</div></div>
-
-    <!-- VITAMINS -->
-    <div class="test-card"><h3>Vitamin D</h3><p>Bone & immunity health</p><div class="price">₹800 – ₹1,800</div></div>
-    <div class="test-card"><h3>Vitamin B12</h3><p>Nerve & blood health</p><div class="price">₹500 – ₹1,200</div></div>
-
-    <!-- INFECTIOUS -->
-    <div class="test-card"><h3>CRP</h3><p>Inflammation marker</p><div class="price">₹400 – ₹900</div></div>
-    <div class="test-card"><h3>Dengue Test</h3><p>Dengue virus detection</p><div class="price">₹800 – ₹1,500</div></div>
-    <div class="test-card"><h3>HIV Test</h3><p>HIV screening</p><div class="price">₹300 – ₹800</div></div>
-    <div class="test-card"><h3>HBsAg</h3><p>Hepatitis B</p><div class="price">₹300 – ₹700</div></div>
-
-    <!-- IMAGING -->
-    <div class="test-card"><h3>X-Ray</h3><p>Bone & chest imaging</p><div class="price">₹200 – ₹500</div></div>
-    <div class="test-card"><h3>Ultrasound</h3><p>Abdominal scan</p><div class="price">₹800 – ₹2,000</div></div>
-    <div class="test-card"><h3>ECG</h3><p>Heart rhythm</p><div class="price">₹200 – ₹500</div></div>
-    <div class="test-card"><h3>CT Scan</h3><p>Detailed body imaging</p><div class="price">₹2,500 – ₹6,000</div></div>
-    <div class="test-card"><h3>MRI</h3><p>Advanced imaging</p><div class="price">₹4,000 – ₹10,000</div></div>
-
-
-  </div>
-</div>
-
-<footer>
-  © 2026 Medical Report Assistant • Educational & Informational Purpose Only
-</footer>
+</section>
 
 </body>
 </html>
