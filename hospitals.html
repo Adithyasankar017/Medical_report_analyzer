@@ -7,20 +7,45 @@
 <body>
 
 <section class="list-page">
-  <h2>Hospitals Near You</h2>
-
-  <div class="list-card">
-    <h4>City Multi-Speciality Hospital</h4>
-    <p>Type: Multi-speciality</p>
-    <p>📞 0484-123456</p>
-  </div>
-
-  <div class="list-card">
-    <h4>Government Medical College</h4>
-    <p>Type: Government Hospital</p>
-    <p>📞 0484-654321</p>
-  </div>
+  <h2 id="pageTitle">Hospitals Near You</h2>
+  <div id="hospitalList"></div>
 </section>
+
+<script>
+  const city = localStorage.getItem("selectedCity");
+  const area = localStorage.getItem("selectedArea");
+
+  const hospitalData = {
+    trivandrum: {
+      kazhakoottam: [
+        { name: "City Care Hospital", type: "Multi-speciality", phone: "0471-223344" }
+      ],
+      pattom: [
+        { name: "Government Medical College", type: "Government", phone: "0471-445566" }
+      ]
+    }
+  };
+
+  document.getElementById("pageTitle").innerText =
+    `Hospitals in ${area}, ${city}`;
+
+  const list = document.getElementById("hospitalList");
+
+  if (hospitalData[city] && hospitalData[city][area]) {
+    hospitalData[city][area].forEach(hos => {
+      const div = document.createElement("div");
+      div.className = "list-card";
+      div.innerHTML = `
+        <h4>${hos.name}</h4>
+        <p>Type: ${hos.type}</p>
+        <p>📞 ${hos.phone}</p>
+      `;
+      list.appendChild(div);
+    });
+  } else {
+    list.innerHTML = "<p>No hospitals found for this location.</p>";
+  }
+</script>
 
 </body>
 </html>

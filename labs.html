@@ -7,20 +7,42 @@
 <body>
 
 <section class="list-page">
-  <h2>Laboratories Near You</h2>
-
-  <div class="list-card">
-    <h4>MedLife Diagnostics</h4>
-    <p>Services: Blood Tests, Scans</p>
-    <p>📞 9012345678</p>
-  </div>
-
-  <div class="list-card">
-    <h4>HealthPlus Labs</h4>
-    <p>Services: Pathology, Home Collection</p>
-    <p>📞 9898989898</p>
-  </div>
+  <h2 id="pageTitle">Labs Near You</h2>
+  <div id="labList"></div>
 </section>
+
+<script>
+  const city = localStorage.getItem("selectedCity");
+  const area = localStorage.getItem("selectedArea");
+
+  const labData = {
+    trivandrum: {
+      kazhakoottam: [
+        { name: "MedLife Diagnostics", service: "Blood Tests", phone: "9012345678" }
+      ]
+    }
+  };
+
+  document.getElementById("pageTitle").innerText =
+    `Laboratories in ${area}, ${city}`;
+
+  const list = document.getElementById("labList");
+
+  if (labData[city] && labData[city][area]) {
+    labData[city][area].forEach(lab => {
+      const div = document.createElement("div");
+      div.className = "list-card";
+      div.innerHTML = `
+        <h4>${lab.name}</h4>
+        <p>Services: ${lab.service}</p>
+        <p>📞 ${lab.phone}</p>
+      `;
+      list.appendChild(div);
+    });
+  } else {
+    list.innerHTML = "<p>No labs found for this location.</p>";
+  }
+</script>
 
 </body>
 </html>
