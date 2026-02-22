@@ -1,25 +1,377 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Medical Tests - Medical Report Analyzer</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="css/style.css">
-  <style>
-    .tests-page { min-height: 100vh; background: linear-gradient(135deg, #eef3ff, #f7faff); padding-bottom: 80px; }
-    .tests-header { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); color: white; padding: 100px 40px; text-align: center; position: relative; overflow: hidden; }
-    .tests-header::before { content: '📋'; position: absolute; font-size: 200px; opacity: 0.1; right: -20px; top: -50px; }
-    .tests-header h1 { font-size: 48px; font-weight: 800; margin-bottom: 15px; position: relative; z-index: 1; }
-    .tests-header p { font-size: 18px; opacity: 0.95; position: relative; z-index: 1; }
-    .categories-section { max-width: 1200px; margin: 60px auto; padding: 0 20px; }
-    .category { margin-bottom: 60px; }
-    .category-title { font-size: 28px; font-weight: 700; margin-bottom: 25px; color: #111; display: flex; align-items: center; gap: 12px; }
-    .tests-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-    .test-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.06); transition: all 0.3s; border-left: 5px solid #fa709a; }
-    .test-card:hover { transform: translateY(-8px); box-shadow: 0 12px 30px rgba(250, 112, 154, 0.15); }
-    .test-name { font-size: 17px; font-weight: 700; color: #111; margin-bottom: 8px; }
-    .test-type { font-size: 12px; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 12px; }
-    .test-price { font-size: 20px; font-weight: 700; color: #fa709a; margin: 12px 0; }
-    .test-action { width: 100%; padding: 10px; background: linear-gradient(135deg, #fa709a, #fee140); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.3s; margin-top: 15px; }
-    .test-action:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(250, 112, 154, 0.3); }
-    @media (max-width: 768px) { .tests-header { padding: 60px 20px; } .tests-header h1 { font-size: 32px; } }\n  </style>\n</head>\n<body>\n  <div class=\"top-bar\">\n    <h2>Medical Report Analyzer</h2>\n    <a href=\"index.html\" style=\"color: #fa709a; text-decoration: none; font-weight: 600; cursor: pointer;\">← Back to Home</a>\n  </div>\n  <div class=\"tests-page\">\n    <div class=\"tests-header\">\n      <h1>📋 Medical Tests & Packages</h1>\n      <p>Comprehensive diagnostic tests for every health need</p>\n    </div>\n    <div class=\"categories-section\" id=\"testsContainer\"></div>\n  </div>\n  <footer>\n    © 2026 Medical Report Analyzer\n  </footer>\n  <script src=\"js/data-trivandrum.js\"></script>\n  <script src=\"js/data-kochi.js\"></script>\n  <script>\n    let allTests = [];\n    function getCityData(city) { if (city === \"Trivandrum\") return typeof trivandrumData !== \"undefined\" ? trivandrumData : null; if (city === \"Kochi\") return typeof kochiData !== \"undefined\" ? kochiData : null; return null; }\n    function loadTests() { const city = localStorage.getItem(\"selectedCity\"); if (!city) { alert(\"Please select a city first\"); window.location.href = \"index.html\"; return; } const cityData = getCityData(city); allTests = cityData?.tests || []; renderTests(); }\n    function renderTests() { const container = document.getElementById(\"testsContainer\"); container.innerHTML = \"\"; if (allTests.length === 0) { container.innerHTML = '<div style=\"text-align:center;padding:60px;\"><div style=\"font-size:80px;opacity:0.3;margin-bottom:20px;\">📋</div><p>No tests available</p></div>'; return; } const categories = {}; allTests.forEach(test => { const cat = test.type || \"General\"; if (!categories[cat]) categories[cat] = []; categories[cat].push(test); }); Object.entries(categories).forEach(([cat, tests]) => { const html = `<div class=\"category\"><h2 class=\"category-title\">${getCategoryIcon(cat)} ${cat}</h2><div class=\"tests-grid\">${tests.map(test => `<div class=\"test-card\"><div class=\"test-name\">${test.name}</div><div class=\"test-type\">${test.type}</div><div class=\"test-price\">₹${test.price}</div><button class=\"test-action\" onclick=\"bookTest('${test.name}', ${test.price})\">🛒 Book Test</button></div>`).join('')}</div></div>`; container.innerHTML += html; }); }\n    function getCategoryIcon(cat) { const icons = { \"Blood\": \"🩸\", \"Urine\": \"🧪\", \"Imaging\": \"🖼️\", \"Package\": \"📦\", \"General\": \"📋\" }; return icons[cat] || \"📋\"; }\n    function bookTest(name, price) { alert(`Booked: ${name} (₹${price})\\n\\nProceeding to checkout!`); }\n    window.addEventListener('DOMContentLoaded', loadTests);\n  </script>\n</body>\n</html>\n
+    <meta charset="UTF-8">
+    <title>Medical Tests - Medical Report Analyzer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* General Reset */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+        .top-bar { 
+            background: white; 
+            padding: 15px 40px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .tests-page { min-height: 100vh; background: #f8faff; padding-bottom: 80px; }
+        
+        .tests-header { 
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); 
+            color: white; 
+            padding: 80px 20px; 
+            text-align: center; 
+            position: relative; 
+        }
+
+        .tests-header h1 { font-size: clamp(24px, 5vw, 48px); font-weight: 800; margin-bottom: 10px; }
+        
+        .categories-section { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+        
+        .category { margin-bottom: 50px; }
+        .category-title { 
+            font-size: 24px; 
+            font-weight: 700; 
+            margin-bottom: 20px; 
+            color: #333; 
+            border-bottom: 2px solid #fa709a;
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+
+        .tests-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+            gap: 25px; 
+            margin-top: 20px;
+        }
+
+        .test-card { 
+            background: white; 
+            border-radius: 16px; 
+            padding: 24px; 
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); 
+            transition: all 0.3s ease; 
+            border-top: 4px solid #fa709a;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .test-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(250, 112, 154, 0.2); }
+        
+        .test-name { font-size: 18px; font-weight: 700; color: #222; margin-bottom: 5px; }
+        .test-type { font-size: 12px; color: #888; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+        .test-price { font-size: 22px; font-weight: 800; color: #fa709a; margin: 15px 0; }
+
+        .test-action { 
+            width: 100%; 
+            padding: 12px; 
+            background: linear-gradient(135deg, #fa709a, #f8bc2c); 
+            color: white; 
+            border: none; 
+            border-radius: 8px; 
+            font-weight: 700; 
+            cursor: pointer; 
+            transition: 0.3s;
+        }
+
+        footer { text-align: center; padding: 40px; color: #666; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <h2 style="color: #444; font-size: 20px;">Medical Report Analyzer</h2>
+        <a href="index.html" style="color: #fa709a; text-decoration: none; font-weight: 600;">← Back to Home</a>
+    </div>
+
+    <div class="tests-page">
+        <div class="tests-header">
+            <h1>📋 Medical Tests & Packages</h1>
+            <p id="cityDisplay">Loading city tests...</p>
+        </div>
+
+        <div class="categories-section" id="testsContainer">
+            </div>
+    </div>
+
+    <footer>
+        © 2026 Medical Report Analyzer
+    </footer>
+
+    <script>
+        // Use default data if external scripts are missing
+        window.trivandrumData = window.trivandrumData || {
+         tests: [
+ {
+    "name": "Complete Blood Count (CBC)",
+    "type": "Haematology",
+    "price": "250 - 450"
+  },
+  {
+    "name": "Fasting Blood Sugar (FBS)",
+    "type": "Biochemistry",
+    "price": "60 - 100"
+  },
+  {
+    "name": "Post Prandial Blood Sugar (PPBS)",
+    "type": "Biochemistry",
+    "price": "60 - 100"
+  },
+  {
+    "name": "HbA1c (Glycosylated Haemoglobin)",
+    "type": "Diabetic Profile",
+    "price": "400 - 650"
+  },
+  {
+    "name": "Lipid Profile (Full)",
+    "type": "Lipid Profile",
+    "price": "450 - 850"
+  },
+  {
+    "name": "Liver Function Test (LFT)",
+    "type": "Liver Profile",
+    "price": "600 - 1100"
+  },
+  {
+    "name": "Kidney Function Test (KFT/RFT)",
+    "type": "Renal Profile",
+    "price": "500 - 900"
+  },
+  {
+    "name": "Serum Creatinine",
+    "type": "Renal Profile",
+    "price": "150 - 250"
+  },
+  {
+    "name": "Thyroid Profile (T3, T4, TSH)",
+    "type": "Hormones",
+    "price": "350 - 650"
+  },
+  {
+    "name": "Vitamin D 25-Hydroxy",
+    "type": "Vitamins",
+    "price": "1100 - 1800"
+  },
+  {
+    "name": "Vitamin B12",
+    "type": "Vitamins",
+    "price": "700 - 1200"
+  },
+  {
+    "name": "C-Reactive Protein (CRP)",
+    "type": "Serology",
+    "price": "350 - 550"
+  },
+  {
+    "name": "Urine Routine Examination",
+    "type": "Urine Analysis",
+    "price": "100 - 200"
+  },
+  {
+    "name": "PSA (Prostate Specific Antigen)",
+    "type": "Tumour Markers",
+    "price": "700 - 1200"
+  },
+  {
+    "name": "Anti-Mullerian Hormone (AMH)",
+    "type": "Hormones",
+    "price": "1800 - 2800"
+  },
+  {
+    "name": "Dengue NS1 Antigen",
+    "type": "Infectious Diseases",
+    "price": "600 - 900"
+  },
+  {
+    "name": "HBsAg (Hepatitis B)",
+    "type": "Serology",
+    "price": "300 - 500"
+  },
+  {
+    "name": "Electrolytes (Sodium, Potassium, Chloride)",
+    "type": "Biochemistry",
+    "price": "450 - 650"
+  },
+  {
+    "name": "Urine Culture & Sensitivity",
+    "type": "Microbiology",
+    "price": "600 - 950"
+  }
+]    
+        };
+        window.kochiData = window.kochiData || {
+         tests: [
+  {
+    "name": "Complete Blood Count (CBC)",
+    "type": "Haematology",
+    "price": "250 - 450"
+  },
+  {
+    "name": "Fasting Blood Sugar (FBS)",
+    "type": "Biochemistry",
+    "price": "60 - 100"
+  },
+  {
+    "name": "Post Prandial Blood Sugar (PPBS)",
+    "type": "Biochemistry",
+    "price": "60 - 100"
+  },
+  {
+    "name": "HbA1c (Glycosylated Haemoglobin)",
+    "type": "Diabetic Profile",
+    "price": "400 - 650"
+  },
+  {
+    "name": "Lipid Profile (Full)",
+    "type": "Lipid Profile",
+    "price": "450 - 850"
+  },
+  {
+    "name": "Liver Function Test (LFT)",
+    "type": "Liver Profile",
+    "price": "600 - 1100"
+  },
+  {
+    "name": "Kidney Function Test (KFT/RFT)",
+    "type": "Renal Profile",
+    "price": "500 - 900"
+  },
+  {
+    "name": "Serum Creatinine",
+    "type": "Renal Profile",
+    "price": "150 - 250"
+  },
+  {
+    "name": "Thyroid Profile (T3, T4, TSH)",
+    "type": "Hormones",
+    "price": "350 - 650"
+  },
+  {
+    "name": "Vitamin D 25-Hydroxy",
+    "type": "Vitamins",
+    "price": "1100 - 1800"
+  },
+  {
+    "name": "Vitamin B12",
+    "type": "Vitamins",
+    "price": "700 - 1200"
+  },
+  {
+    "name": "C-Reactive Protein (CRP)",
+    "type": "Serology",
+    "price": "350 - 550"
+  },
+  {
+    "name": "Urine Routine Examination",
+    "type": "Urine Analysis",
+    "price": "100 - 200"
+  },
+  {
+    "name": "PSA (Prostate Specific Antigen)",
+    "type": "Tumour Markers",
+    "price": "700 - 1200"
+  },
+  {
+    "name": "Anti-Mullerian Hormone (AMH)",
+    "type": "Hormones",
+    "price": "1800 - 2800"
+  },
+  {
+    "name": "Dengue NS1 Antigen",
+    "type": "Infectious Diseases",
+    "price": "600 - 900"
+  },
+  {
+    "name": "HBsAg (Hepatitis B)",
+    "type": "Serology",
+    "price": "300 - 500"
+  },
+  {
+    "name": "Electrolytes (Sodium, Potassium, Chloride)",
+    "type": "Biochemistry",
+    "price": "450 - 650"
+  },
+  {
+    "name": "Urine Culture & Sensitivity",
+    "type": "Microbiology",
+    "price": "600 - 950"
+  }
+]    
+        };
+    </script>
+
+    <script>
+        function getCategoryIcon(cat) {
+            const icons = { "Blood": "🩸", "Urine": "🧪", "Imaging": "🖼️", "Package": "📦", "General": "📋" };
+            return icons[cat] || "📋";
+        }
+
+        function renderTests(tests) {
+            const container = document.getElementById("testsContainer");
+            container.innerHTML = "";
+
+            if (!tests || tests.length === 0) {
+                container.innerHTML = `<div style="text-align:center; padding:50px; color:#666;">
+                    <p style="font-size:50px;">🔍</p>
+                    <p>No tests found for this location.</p>
+                </div>`;
+                return;
+            }
+
+            // Grouping by Category
+            const categories = tests.reduce((acc, test) => {
+                const cat = test.type || "General";
+                if (!acc[cat]) acc[cat] = [];
+                acc[cat].push(test);
+                return acc;
+            }, {});
+
+            for (const [category, testList] of Object.entries(categories)) {
+                const section = document.createElement('div');
+                section.className = 'category';
+                
+                section.innerHTML = `
+                    <h2 class="category-title">${getCategoryIcon(category)} ${category}</h2>
+                    <div class="tests-grid">
+                        ${testList.map(test => `
+                            <div class="test-card">
+                                <div>
+                                    <div class="test-type">${test.type}</div>
+                                    <div class="test-name">${test.name}</div>
+                                </div>
+                                <div>
+                                    <div class="test-price">₹${test.price}</div>
+                                    <button class="test-action" onclick="bookTest('${test.name}', ${test.price})">🛒 Book Test</button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                container.appendChild(section);
+            }
+        }
+
+        function bookTest(name, price) {
+            alert(`Selected: ${name}\nTotal: ₹${price}\n\nProceeding to secure checkout...`);
+        }
+
+        function init() {
+            const selectedCity = localStorage.getItem("selectedCity") || "Trivandrum";
+            document.getElementById("cityDisplay").innerText = `Available diagnostic tests in ${selectedCity}`;
+            
+            let data = (selectedCity === "Kochi") ? window.kochiData : window.trivandrumData;
+            renderTests(data.tests);
+        }
+
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
