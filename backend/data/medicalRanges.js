@@ -1,8 +1,188 @@
 const medicalRanges = {
-    hemoglobin: { min: 13, max: 17, unit: "g/dL" },
-    wbc: { min: 4000, max: 11000, unit: "cells" },
-    glucose: { min: 70, max: 140, unit: "mg/dL" },
-    platelets: { min: 150000, max: 450000, unit: "cells" }
+    // --- 1. HAEMATOLOGY (CBC & RELATED) ---
+    hemoglobin_male: { min: 13.5, max: 17.5, unit: "g/dL" },
+    hemoglobin_female: { min: 12.0, max: 16.0, unit: "g/dL" },
+    wbc_total_count: { min: 4000, max: 11000, unit: "cells/mcL" },
+    platelet_count: { min: 150000, max: 450000, unit: "cells/mcL" },
+    rbc_count_male: { min: 4.5, max: 5.9, unit: "million/mcL" },
+    rbc_count_female: { min: 4.1, max: 5.1, unit: "million/mcL" },
+    pcv_hematocrit_male: { min: 40, max: 52, unit: "%" },
+    pcv_hematocrit_female: { min: 36, max: 47, unit: "%" },
+    mcv: { min: 80, max: 100, unit: "fL" },
+    mch: { min: 27, max: 32, unit: "pg" },
+    mchc: { min: 32, max: 36, unit: "g/dL" },
+    rdw_cv: { min: 11.5, max: 14.5, unit: "%" },
+    absolute_neutrophil_count: { min: 2000, max: 7000, unit: "cells/mcL" },
+    absolute_lymphocyte_count: { min: 1000, max: 4000, unit: "cells/mcL" },
+    absolute_monocyte_count: { min: 200, max: 1000, unit: "cells/mcL" },
+    absolute_eosinophil_count: { min: 40, max: 440, unit: "cells/mcL" },
+    absolute_basophil_count: { min: 0, max: 100, unit: "cells/mcL" },
+    neutrophils_percent: { min: 40, max: 75, unit: "%" },
+    lymphocytes_percent: { min: 20, max: 45, unit: "%" },
+    monocytes_percent: { min: 2, max: 10, unit: "%" },
+    eosinophils_percent: { min: 1, max: 6, unit: "%" },
+    basophils_percent: { min: 0, max: 1, unit: "%" },
+    esr_male: { min: 0, max: 15, unit: "mm/hr" },
+    esr_female: { min: 0, max: 20, unit: "mm/hr" },
+    reticulocyte_count: { min: 0.5, max: 2.5, unit: "%" },
+
+    // --- 2. DIABETIC PROFILE ---
+    glucose_fasting: { min: 70, max: 100, unit: "mg/dL" },
+    glucose_pp: { min: 70, max: 140, unit: "mg/dL" },
+    glucose_random: { min: 70, max: 140, unit: "mg/dL" },
+    hba1c: { min: 4.0, max: 5.6, unit: "%" },
+    avg_blood_glucose: { min: 70, max: 126, unit: "mg/dL" },
+    fructosamine: { min: 200, max: 285, unit: "umol/L" },
+    insulin_fasting: { min: 2.6, max: 24.9, unit: "uIU/mL" },
+    c_peptide: { min: 1.1, max: 4.4, unit: "ng/mL" },
+    urine_glucose: { min: 0, max: 0, unit: "mg/dL" },
+
+    // --- 3. RENAL (KIDNEY) FUNCTION ---
+    serum_creatinine_male: { min: 0.7, max: 1.3, unit: "mg/dL" },
+    serum_creatinine_female: { min: 0.6, max: 1.1, unit: "mg/dL" },
+    blood_urea: { min: 15, max: 45, unit: "mg/dL" },
+    bun: { min: 7, max: 20, unit: "mg/dL" },
+    uric_acid_male: { min: 3.5, max: 7.2, unit: "mg/dL" },
+    uric_acid_female: { min: 2.6, max: 6.0, unit: "mg/dL" },
+    egfr_normal: { min: 90, max: 120, unit: "mL/min/1.73m²" },
+    cystatin_c: { min: 0.6, max: 1.0, unit: "mg/L" },
+    urea_creatinine_ratio: { min: 10, max: 20, unit: "ratio" },
+    urine_creatinine: { min: 500, max: 2000, unit: "mg/24hr" },
+    urine_microalbumin: { min: 0, max: 30, unit: "mg/L" },
+
+    // --- 4. LIVER FUNCTION TEST (LFT) ---
+    bilirubin_total: { min: 0.2, max: 1.2, unit: "mg/dL" },
+    bilirubin_direct: { min: 0.0, max: 0.3, unit: "mg/dL" },
+    bilirubin_indirect: { min: 0.2, max: 0.8, unit: "mg/dL" },
+    sgot_ast: { min: 5, max: 40, unit: "U/L" },
+    sgpt_alt: { min: 7, max: 55, unit: "U/L" },
+    alkaline_phosphatase: { min: 40, max: 130, unit: "U/L" },
+    gamma_gt: { min: 9, max: 48, unit: "U/L" },
+    total_protein: { min: 6.4, max: 8.3, unit: "g/dL" },
+    serum_albumin: { min: 3.5, max: 5.2, unit: "g/dL" },
+    serum_globulin: { min: 2.3, max: 3.5, unit: "g/dL" },
+    albumin_globulin_ratio: { min: 1.1, max: 2.2, unit: "ratio" },
+
+    // --- 5. LIPID PROFILE (HEART) ---
+    total_cholesterol: { min: 125, max: 200, unit: "mg/dL" },
+    triglycerides: { min: 30, max: 150, unit: "mg/dL" },
+    hdl_cholesterol: { min: 40, max: 60, unit: "mg/dL" },
+    ldl_cholesterol: { min: 0, max: 100, unit: "mg/dL" },
+    vldl_cholesterol: { min: 2, max: 30, unit: "mg/dL" },
+    non_hdl_cholesterol: { min: 0, max: 130, unit: "mg/dL" },
+    cholesterol_hdl_ratio: { min: 3.3, max: 4.4, unit: "ratio" },
+    ldl_hdl_ratio: { min: 0.5, max: 3.0, unit: "ratio" },
+
+    // --- 6. ELECTROLYTES ---
+    sodium: { min: 136, max: 145, unit: "mmol/L" },
+    potassium: { min: 3.5, max: 5.1, unit: "mmol/L" },
+    chloride: { min: 98, max: 107, unit: "mmol/L" },
+    bicarbonate: { min: 22, max: 29, unit: "mmol/L" },
+    ionized_calcium: { min: 4.5, max: 5.6, unit: "mg/dL" },
+    serum_calcium_total: { min: 8.5, max: 10.2, unit: "mg/dL" },
+    serum_magnesium: { min: 1.7, max: 2.2, unit: "mg/dL" },
+    serum_phosphorus: { min: 2.5, max: 4.5, unit: "mg/dL" },
+
+    // --- 7. THYROID PROFILE ---
+    tsh: { min: 0.45, max: 4.5, unit: "mIU/L" },
+    total_t3: { min: 80, max: 200, unit: "ng/dL" },
+    total_t4: { min: 5.0, max: 12.0, unit: "mcg/dL" },
+    free_t3: { min: 2.3, max: 4.2, unit: "pg/mL" },
+    free_t4: { min: 0.8, max: 1.8, unit: "ng/dL" },
+    anti_tpo_antibodies: { min: 0, max: 34, unit: "IU/mL" },
+    anti_thyroglobulin_abs: { min: 0, max: 115, unit: "IU/mL" },
+
+    // --- 8. VITAMINS & MINERALS ---
+    vitamin_d_25_hydroxy: { min: 30, max: 100, unit: "ng/mL" },
+    vitamin_b12: { min: 200, max: 900, unit: "pg/mL" },
+    folate_serum: { min: 3.1, max: 17.5, unit: "ng/mL" },
+    vitamin_a: { min: 20, max: 60, unit: "mcg/dL" },
+    vitamin_e: { min: 5.5, max: 17.0, unit: "mg/L" },
+    serum_iron: { min: 60, max: 170, unit: "mcg/dL" },
+    serum_ferritin_male: { min: 20, max: 250, unit: "ng/mL" },
+    serum_ferritin_female: { min: 10, max: 150, unit: "ng/mL" },
+    tibc: { min: 250, max: 450, unit: "mcg/dL" },
+    transferrin_saturation: { min: 20, max: 50, unit: "%" },
+    serum_zinc: { min: 60, max: 120, unit: "mcg/dL" },
+    serum_copper: { min: 70, max: 140, unit: "mcg/dL" },
+
+    // --- 9. CARDIAC MARKERS ---
+    hs_crp: { min: 0, max: 1, unit: "mg/L" },
+    troponin_i: { min: 0, max: 0.04, unit: "ng/mL" },
+    troponin_t: { min: 0, max: 0.01, unit: "ng/mL" },
+    ck_mb: { min: 0, max: 25, unit: "U/L" },
+    cpk_total_male: { min: 39, max: 308, unit: "U/L" },
+    cpk_total_female: { min: 26, max: 192, unit: "U/L" },
+    nt_probnp: { min: 0, max: 125, unit: "pg/mL" },
+    homocysteine: { min: 5, max: 15, unit: "umol/L" },
+    ldh: { min: 140, max: 280, unit: "U/L" },
+
+    // --- 10. HORMONES (REPRODUCTIVE & OTHERS) ---
+    testosterone_total_male: { min: 280, max: 1100, unit: "ng/dL" },
+    testosterone_total_female: { min: 15, max: 70, unit: "ng/dL" },
+    prolactin_male: { min: 2, max: 18, unit: "ng/mL" },
+    prolactin_female: { min: 3, max: 25, unit: "ng/mL" },
+    estradiol_male: { min: 10, max: 50, unit: "pg/mL" },
+    progesterone_male: { min: 0.2, max: 0.5, unit: "ng/mL" },
+    fsh_male: { min: 1.5, max: 12.4, unit: "mIU/mL" },
+    lh_male: { min: 1.7, max: 8.6, unit: "mIU/mL" },
+    amh_female_fertile: { min: 1.5, max: 4.0, unit: "ng/mL" },
+    cortisol_morning: { min: 5, max: 23, unit: "mcg/dL" },
+    dheas_male: { min: 80, max: 560, unit: "mcg/dL" },
+    growth_hormone: { min: 0, max: 5, unit: "ng/mL" },
+    acth: { min: 10, max: 60, unit: "pg/mL" },
+
+    // --- 11. TUMOR MARKERS ---
+    psa_total: { min: 0, max: 4, unit: "ng/mL" },
+    psa_free_ratio: { min: 25, max: 100, unit: "%" },
+    ca_125: { min: 0, max: 35, unit: "U/mL" },
+    ca_19_9: { min: 0, max: 37, unit: "U/mL" },
+    ca_15_3: { min: 0, max: 30, unit: "U/mL" },
+    afp: { min: 0, max: 10, unit: "ng/mL" },
+    cea: { min: 0, max: 3, unit: "ng/mL" },
+    beta_hcg_non_preg: { min: 0, max: 5, unit: "mIU/mL" },
+
+    // --- 12. COAGULATION PROFILE ---
+    prothrombin_time: { min: 11, max: 13.5, unit: "seconds" },
+    inr: { min: 0.8, max: 1.1, unit: "ratio" },
+    aptt: { min: 25, max: 35, unit: "seconds" },
+    fibrinogen: { min: 200, max: 400, unit: "mg/dL" },
+    bleeding_time: { min: 2, max: 7, unit: "minutes" },
+    clotting_time: { min: 5, max: 11, unit: "minutes" },
+    d_dimer: { min: 0, max: 500, unit: "ng/mL" },
+
+    // --- 13. PANCREATIC & DIGESTIVE ---
+    amylase_serum: { min: 30, max: 110, unit: "U/L" },
+    lipase_serum: { min: 0, max: 160, unit: "U/L" },
+    fecal_elastase: { min: 200, max: 500, unit: "ug/g" },
+
+    // --- 14. BONE & JOINT ---
+    rheumatoid_factor: { min: 0, max: 14, unit: "IU/mL" },
+    anti_ccp: { min: 0, max: 20, unit: "U/mL" },
+    ana_titer: { min: 0, max: 1, unit: "1:40 dilution" },
+    aslo_titer: { min: 0, max: 200, unit: "IU/mL" },
+    serum_osteocalcin: { min: 8, max: 52, unit: "ng/mL" },
+
+    // --- 15. URINALYSIS (COMMON) ---
+    urine_ph: { min: 4.5, max: 8.0, unit: "pH" },
+    urine_specific_gravity: { min: 1.005, max: 1.030, unit: "sg" },
+    urine_protein: { min: 0, max: 150, unit: "mg/24hr" },
+    urine_urobilinogen: { min: 0.2, max: 1.0, unit: "mg/dL" },
+
+    // --- 16. MISCELLANEOUS BIOMARKERS ---
+    insulin_like_growth_factor_1: { min: 115, max: 307, unit: "ng/mL" },
+    ceruloplasmin: { min: 20, max: 60, unit: "mg/dL" },
+    alpha_1_antitrypsin: { min: 90, max: 200, unit: "mg/dL" },
+    complement_c3: { min: 90, max: 180, unit: "mg/dL" },
+    complement_c4: { min: 10, max: 40, unit: "mg/dL" },
+    ig_total_igg: { min: 700, max: 1600, unit: "mg/dL" },
+    ig_total_iga: { min: 70, max: 400, unit: "mg/dL" },
+    ig_total_igm: { min: 40, max: 230, unit: "mg/dL" },
+    total_ige: { min: 0, max: 100, unit: "kU/L" },
+    gastrin: { min: 0, max: 100, unit: "pg/mL" },
+    erythropoietin: { min: 4, max: 24, unit: "mU/mL" },
+    pepsinogen_1: { min: 30, max: 165, unit: "ng/mL" },
+    procalcitonin: { min: 0, max: 0.05, unit: "ng/mL" }
 };
 
 module.exports = medicalRanges;
