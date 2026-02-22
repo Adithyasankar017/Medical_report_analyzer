@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Analysis Results - Medical Report Analyzer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .results-container {
+      min-height: 100vh;
+      padding: 40px 20px;
+      background: linear-gradient(135deg, #eef3ff, #f7faff);
+    }
+
+    .results-header {
+      max-width: 1200px;
+      margin: 0 auto 50px;
+      text-align: center;
+    }
+
+    .results-header h1 {
+      font-size: 42px;
+      font-weight: 800;
+      margin-bottom: 15px;
+      background: linear-gradient(135deg, #4c6fff, #6f8bff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .results-header p {
+      font-size: 16px;
+      color: #555;
+      margin-bottom: 25px;
+    }
+
+    .results-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 30px;
+      margin-bottom: 50px;
+    }
+
+    .test-result-card {
+      background: white;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 10px 35px rgba(0,0,0,0.08);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+
+    .test-result-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.12);
+    }
+
+    .test-result-card.normal {
+      border-top: 5px solid #27ae60;
+    }
+
+    .test-result-card.low {
+      border-top: 5px solid #f39c12;
+    }
+
+    .test-result-card.high {
+      border-top: 5px solid #e74c3c;
+    }
+
+    .result-status-badge {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      padding: 8px 15px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .result-status-badge.normal {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .result-status-badge.low {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .result-status-badge.high {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    .test-result-header {
+      padding: 30px 25px 20px;
+    }
+
+    .test-name {
+      font-size: 22px;
+      font-weight: 700;
+      color: #111;
+      margin-bottom: 10px;
+      text-transform: capitalize;
+    }
+
+    .test-result-body {
+      padding: 0 25px 25px;
+    }
+
+    .result-detail {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid #f0f0f0;
+      font-size: 14px;
+    }
+
+    .result-detail:last-child {
+      border-bottom: none;
+    }
+
+    .result-detail strong {
+      color: #111;
+      min-width: 120px;
+    }
+
+    .result-value {
+      font-weight: 600;
+      color: #4c6fff;
+    }
+
+    .normal-range {
+      color: #666;
+      font-size: 13px;
+      background: #f9f9f9;
+      padding: 10px;
+      border-radius: 6px;
+      margin: 15px 0;
+    }
+
+    .explanation-section {
+      background: linear-gradient(135deg, #f8faff, #f0f5ff);
+      padding: 20px;
+      border-radius: 12px;
+      margin-top: 15px;
+      border-left: 4px solid #4c6fff;
+    }
+
+    .explanation-label {
+      font-weight: 600;
+      font-size: 13px;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+
+    .explanation-text {
+      font-size: 14px;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    .results-disclaimer {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 25px;
+      background: #fff3cd;
+      border-left: 5px solid #ffc107;
+      border-radius: 10px;
+      color: #856404;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .results-disclaimer strong {
+      display: block;
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+
+    .results-actions {
+      max-width: 1200px;
+      margin: 40px auto;
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .action-btn {
+      padding: 14px 35px;
+      border: none;
+      border-radius: 50px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+      font-size: 15px;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .action-btn-primary {
+      background: linear-gradient(90deg, #4c6fff, #6f8bff);
+      color: white;
+      box-shadow: 0 8px 20px rgba(76, 111, 255, 0.3);
+    }
+
+    .action-btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(76, 111, 255, 0.4);
+    }
+
+    .action-btn-secondary {
+      background: white;
+      color: #4c6fff;
+      border: 2px solid #4c6fff;
+    }
+
+    .action-btn-secondary:hover {
+      background: #f0f5ff;
+    }
+
+    .print-friendly {
+      display: none;
+    }
+
+    @media print {
+      .results-actions,
+      .action-btn {
+        display: none !important;
+      }
+
+      .print-friendly {
+        display: block;
+      }
+
+      .test-result-card {
+        page-break-inside: avoid;
+        break-inside: avoid;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .results-header h1 {
+        font-size: 28px;
+      }
+
+      .results-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .result-detail {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- TOP BAR -->
+  <div class="top-bar">
+    <h2>Medical Report Analyzer</h2>
+    <div>
+      <button class="action-btn action-btn-secondary" onclick="window.print()" style="margin-right: 10px;">🖨️ Print</button>
+      <button class="action-btn action-btn-secondary" onclick="history.back();">← Back</button>
+    </div>
+  </div>
+
+  <!-- RESULTS CONTAINER -->
+  <div class="results-container">
+    <div class="results-header">
+      <h1>📊 Your Medical Report Analysis</h1>
+      <p>Here are the detailed explanations for each parameter detected in your medical report</p>
+    </div>
+
+    <div class="results-grid" id="resultsGrid">
+      <!-- Results will be populated here by JavaScript -->
+    </div>
+
+    <div class="results-disclaimer">
+      <strong>⚠️ Important Disclaimer</strong>
+      This analysis is AI-generated and is provided for informational purposes only. It is not a substitute for professional medical diagnosis, advice, or treatment. Always consult with a qualified healthcare professional before making any health-related decisions. The accuracy of this analysis depends on the clarity and completeness of the uploaded medical report.
+    </div>
+
+    <div class="results-actions">
+      <button class="action-btn action-btn-primary" onclick="window.print()">🖨️ Print Report</button>
+      <button class="action-btn action-btn-secondary" onclick="downloadResults()">📥 Download as PDF</button>
+      <button class="action-btn action-btn-secondary" onclick="window.location.href='index.html'">➕ Analyze Another</button>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    © 2026 Medical Report Analyzer
+  </footer>
+
+  <script>
+    // Display results from sessionStorage
+    window.addEventListener('DOMContentLoaded', () => {
+      const resultsData = sessionStorage.getItem('analysisResults');
+      
+      if (!resultsData) {
+        document.getElementById('resultsGrid').innerHTML = '<p style="text-align: center; grid-column: 1/-1; font-size: 16px;">No results found. <a href="index.html">Upload a report to analyze</a></p>';
+        return;
+      }
+
+      const results = JSON.parse(resultsData);
+      displayResults(results);
+    });
+
+    function displayResults(results) {
+      const grid = document.getElementById('resultsGrid');
+      grid.innerHTML = '';
+
+      if (!results || results.length === 0) {
+        grid.innerHTML = '<p style="text-align: center; grid-column: 1/-1;">No parameters detected.</p>';
+        return;
+      }
+
+      results.forEach(item => {
+        const statusClass = item.status.toLowerCase();
+        const statusEmoji = {
+          'normal': '✅',
+          'low': '⬇️',
+          'high': '⬆️'
+        }[statusClass] || '❓';
+
+        const card = document.createElement('div');
+        card.className = `test-result-card ${statusClass}`;
+
+        card.innerHTML = `
+          <div class="result-status-badge ${statusClass}">
+            ${statusEmoji} ${item.status}
+          </div>
+
+          <div class="test-result-header">
+            <div class="test-name">${item.name.replace(/_/g, ' ')}</div>
+          </div>
+
+          <div class="test-result-body">
+            <div class="result-detail">
+              <strong>Measured Value:</strong>
+              <span class="result-value">${item.value} ${item.unit || ''}</span>
+            </div>
+
+            <div class="normal-range">
+              <strong>Normal Range:</strong> ${item.normalRange}
+            </div>
+
+            <div class="explanation-section">
+              <div class="explanation-label">📋 What This Means</div>
+              <div class="explanation-text">${item.explanation}</div>
+            </div>
+          </div>
+        `;
+
+        grid.appendChild(card);
+      });
+    }
+
+    function downloadResults() {
+      alert('PDF download feature coming soon! You can use the Print option to save as PDF.');
+    }
+  </script>
+</body>
+</html>
