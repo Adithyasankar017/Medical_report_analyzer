@@ -79,6 +79,34 @@ body {
   margin-bottom: 25px;
 }
 
+/* PATIENT INFO */
+.patient-info {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+}
+
+.patient-info input,
+.patient-info select {
+  flex: 1;
+  min-width: 150px;
+  padding: 12px 15px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  background: white;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.patient-info input:focus,
+.patient-info select:focus {
+  outline: none;
+  border-color: #4c6fff;
+  box-shadow: 0 0 0 3px rgba(76, 111, 255, 0.1);
+}
+
 /* UPLOAD CARD */
 .upload-box {
   background: rgba(255, 255, 255, 0.9);
@@ -263,4 +291,54 @@ footer {
   margin-bottom: 6px;
   font-size: 14px;
   color: #444;
+}
+
+/* RESULT CARDS */
+#result {
+  margin-top: 30px;
+}
+
+#result h2 {
+  font-size: 28px;
+  margin-bottom: 25px;
+  color: #111;
+}
+
+.result-card {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+  margin-bottom: 20px;
+  transition: 0.3s;
+}
+
+.result-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+}
+
+.result-card h3 {
+  font-size: 20px;
+  margin-bottom: 15px;
+  color: #111;
+}
+
+.result-card p {
+  margin-bottom: 12px;
+  line-height: 1.6;
+  color: #333;
+}
+
+.result-card strong {
+  color: #000;
+}
+
+.disclaimer {
+  background-color: #fff3cd !important;
+  padding: 12px !important;
+  border-left: 4px solid #ffc107;
+  border-radius: 4px;
+  font-size: 12px !important;
+  color: #856404;
 }
