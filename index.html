@@ -1,20 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Medical Report Analyzer</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- CSS -->
-  <link rel="stylesheet" href="css/style.css" />
+  <!-- ✅ CORRECT CSS PATH -->
+  <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
 
-  <!-- ================= HEADER ================= -->
-  <header class="top-bar">
-    <h1>Medical Report Analyzer</h1>
+  <!-- TOP BAR -->
+  <div class="top-bar">
+    <h2>Medical Report Analyzer</h2>
 
-    <!-- City selection moved to top-right -->
     <div class="location-select">
       <select id="citySelect">
         <option value="">Select City</option>
@@ -22,84 +22,164 @@
         <option value="Kochi">Kochi</option>
       </select>
     </div>
-  </header>
+  </div>
 
-  <!-- ================= HERO SECTION ================= -->
+  <!-- HERO SECTION -->
   <section class="hero">
+
+    <!-- LEFT SIDE -->
     <div class="hero-left">
-      <h2>Understand Medical Reports<br>with Confidence</h2>
+
+      <h1>Understand Medical Reports<br>with Confidence</h1>
 
       <p>
-        Upload your medical report and get a simple, human-friendly explanation
-        before visiting a doctor.
+        Upload your medical report and get a simple,
+        human-friendly explanation before visiting a doctor.
       </p>
 
-      <!-- Language -->
+      <!-- LANGUAGE -->
       <select id="languageSelect">
-        <option value="en">English</option>
-        <option value="ml">Malayalam</option>
+        <option value="English">English</option>
+        <option value="Malayalam">Malayalam</option>
       </select>
 
-      <!-- Upload -->
+      <!-- UPLOAD BOX -->
       <div class="upload-box">
-        <label>
-          Upload Medical Report
-          <input type="file" id="reportFile" accept=".pdf,.jpg,.png" />
-        </label>
-        <small>Supported formats: PDF, JPG, PNG</small>
+        <label><strong>Upload Medical Report</strong></label><br>
+        <input type="file" id="reportUpload" accept=".pdf,.jpg,.jpeg,.png">
+        <div id="result"></div>
+
+        <p>Supported formats: PDF, JPG, PNG</p>
       </div>
 
-      <!-- Analyze -->
-      <button class="primary-btn" onclick="saveCityAndProceed()">
+      <!-- BUTTON -->
+      <button class="analyze-btn" onclick="analyzeReport()">
         Analyze Report
       </button>
 
-      <!-- Stats -->
+      <!-- STATS -->
       <div class="stats">
         <div><strong>100+</strong><br>Tests Explained</div>
         <div><strong>Live</strong><br>Hospital Data</div>
         <div><strong>Malayalam</strong><br>Support</div>
       </div>
+
     </div>
 
+    <!-- RIGHT SIDE IMAGE -->
     <div class="hero-right">
-      <img src="images/hero-doctor.jpg" alt="Doctor Image" />
+      <!-- ✅ CORRECT IMAGE PATH -->
+      <img src="C:\Users\Admin\Desktop\medical-report-analyzer-frontend\doctors.jpg" alt="Doctors">
     </div>
+
   </section>
 
-  <!-- ================= INFO BUTTONS ================= -->
-  <section class="info-buttons">
+  <!-- INFO BUTTONS -->
+  <div class="info-buttons">
     <a href="doctors.html" class="info-card">Doctors</a>
     <a href="hospitals.html" class="info-card">Hospitals</a>
-    <a href="labs.html" class="info-card">Laboratories</a>
-    <a href="tests.html" class="info-card">Medical Tests</a>
-  </section>
+    <a href="labs.html" class="info-card">Labs</a>
+    <a href="tests.html" class="info-card">Tests</a>
+  </div>
 
-  <!-- ================= FOOTER ================= -->
+  <!-- FOOTER -->
   <footer>
-    © 2026 Medical Report Analyzer • Educational Purpose
+    © 2026 Medical Report Analyzer
   </footer>
 
-  <!-- ================= JS FILES ================= -->
-  <!-- City data files -->
-  <script src="js/data-trivandrum.js"></script>
-  <script src="js/data-kochi.js"></script>
-
-  <!-- Main script -->
-  <script src="js/script.js"></script>
-
-  <!-- ================= INLINE LOGIC ================= -->
+  <!-- ================= CITY SELECTION ================= -->
   <script>
-    function saveCityAndProceed() {
-      const city = document.getElementById("citySelect").value;
+    const citySelect = document.getElementById("citySelect");
 
-      if (!city) {
-        alert("Please select a city");
+    const savedCity = localStorage.getItem("selectedCity");
+    if (savedCity) {
+      citySelect.value = savedCity;
+    }
+
+    citySelect.addEventListener("change", () => {
+      const city = citySelect.value;
+      if (city) {
+        localStorage.setItem("selectedCity", city);
+      } else {
+        localStorage.removeItem("selectedCity");
+      }
+    });
+  </script>
+
+  <!-- ================= REPORT ANALYZER ================= -->
+  <script>
+    async function analyzeReport() {
+
+      const fileInput = document.getElementById("reportUpload");
+      const file = fileInput.files[0];
+
+      if (!file) {
+        alert("Please upload a medical report first.");
         return;
       }
 
-      localStorage.setItem("selectedCity", city);
-      alert("City saved! You can now view doctors, hospitals, labs or tests.");
+      const formData = new FormData();
+      formData.append("report", file);
+
+      const resultDiv = document.getElementById("result");
+      resultDiv.innerHTML = "Analyzing report... Please wait ⏳";
+
+      try {
+
+        const response = await fetch("http://localhost:5000/api/analyze", {
+          method: "POST",
+          body: formData
+        });
+
+        if (!response.ok) {
+          throw new Error("Server error");
+        }
+
+        const data = await response.json();
+        displayResults(data.analysis);
+
+      } catch (error) {
+        resultDiv.innerHTML = "Error analyzing report. Make sure backend server is running.";
+        console.error(error);
+      }
+    }
+
+    function displayResults(results) {
+
+      const resultDiv = document.getElementById("result");
+
+      if (!results || results.length === 0) {
+        resultDiv.innerHTML = "No medical parameters detected.";
+        return;
+      }
+
+      let html = "<h2>Analysis Result</h2>";
+
+      results.forEach(item => {
+
+        let color = "green";
+        if (item.severity === "Medium") color = "orange";
+        if (item.severity === "High") color = "red";
+
+        html += `
+          <div class="result-card">
+            <h3>${item.name.toUpperCase()}</h3>
+            <p><strong>Value:</strong> ${item.value}</p>
+            <p><strong>Normal Range:</strong> ${item.normalRange}</p>
+            <p><strong>Status:</strong> 
+              <span style="color:${color}; font-weight:bold;">
+                ${item.status}
+              </span>
+            </p>
+            <p><strong>Explanation:</strong><br>${item.explanation}</p>
+            <p class="disclaimer">
+              This analysis is AI-generated and not a substitute for medical diagnosis.
+            </p>
+          </div>
+        `;
+      });
+
+      resultDiv.innerHTML = html;
     }
   </script>
 

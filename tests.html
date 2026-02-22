@@ -2,22 +2,22 @@
 <html>
 <head>
   <title>Medical Tests</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 
 <section class="list-page">
   <h2>Medical Tests & Approximate Prices</h2>
-
-  <div class="list-card">Complete Blood Count – ₹300 to ₹600</div>
-  <div class="list-card">Blood Sugar – ₹100 to ₹250</div>
-  <div class="list-card">Lipid Profile – ₹700 to ₹1500</div>
-  <div class="list-card">Thyroid Test – ₹400 to ₹800</div>
-  <div class="list-card">Urine Routine – ₹150 to ₹300</div>
-  <div class="list-card">ECG – ₹200 to ₹500</div>
-  <div class="list-card">Vitamin D – ₹800 to ₹2000</div>
-
+  <div id="list"></div>
 </section>
+
+<script src="js/data-trivandrum.js"></script>
+<script src="js/data-kochi.js"></script>
+<script src="js/script.js"></script>
+
+<script>
+  loadData("tests");
+</script>
 
 </body>
 </html>

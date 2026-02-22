@@ -1,50 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Hospitals Near You</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Hospitals</title>
+  <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 
 <section class="list-page">
-  <h2 id="pageTitle">Hospitals Near You</h2>
-  <div id="hospitalList"></div>
+  <h2>Hospitals</h2>
+  <div id="list"></div>
 </section>
 
+<script src="js/data-kochi.js"></script>
+<script src="js/data-trivandrum.js"></script>
+<script src="js/script.js"></script>
+
 <script>
-  const city = localStorage.getItem("selectedCity");
-  const area = localStorage.getItem("selectedArea");
-
-  const hospitalData = {
-    trivandrum: {
-      kazhakoottam: [
-        { name: "City Care Hospital", type: "Multi-speciality", phone: "0471-223344" }
-      ],
-      pattom: [
-        { name: "Government Medical College", type: "Government", phone: "0471-445566" }
-      ]
-    }
-  };
-
-  document.getElementById("pageTitle").innerText =
-    `Hospitals in ${area}, ${city}`;
-
-  const list = document.getElementById("hospitalList");
-
-  if (hospitalData[city] && hospitalData[city][area]) {
-    hospitalData[city][area].forEach(hos => {
-      const div = document.createElement("div");
-      div.className = "list-card";
-      div.innerHTML = `
-        <h4>${hos.name}</h4>
-        <p>Type: ${hos.type}</p>
-        <p>📞 ${hos.phone}</p>
-      `;
-      list.appendChild(div);
-    });
-  } else {
-    list.innerHTML = "<p>No hospitals found for this location.</p>";
-  }
+  loadData("hospitals");
 </script>
 
 </body>

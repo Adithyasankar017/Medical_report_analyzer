@@ -366,5 +366,102 @@ const kochiData = {
     "address": "Ernakulam South, Kochi",
     "phone": "04842312345"
   }
+],
+tests: [
+  {
+    "name": "Complete Blood Count (CBC)",
+    "type": "Haematology",
+    "price": "250 - 450"
+  },
+  {
+    "name": "Fasting Blood Sugar (FBS)",
+    "type": "Biochemistry",
+    "price": "60 - 100"
+  },
+  {
+    "name": "Post Prandial Blood Sugar (PPBS)",
+    "type": "Biochemistry",
+    "price": "60 - 100"
+  },
+  {
+    "name": "HbA1c (Glycosylated Haemoglobin)",
+    "type": "Diabetic Profile",
+    "price": "400 - 650"
+  },
+  {
+    "name": "Lipid Profile (Full)",
+    "type": "Lipid Profile",
+    "price": "450 - 850"
+  },
+  {
+    "name": "Liver Function Test (LFT)",
+    "type": "Liver Profile",
+    "price": "600 - 1100"
+  },
+  {
+    "name": "Kidney Function Test (KFT/RFT)",
+    "type": "Renal Profile",
+    "price": "500 - 900"
+  },
+  {
+    "name": "Serum Creatinine",
+    "type": "Renal Profile",
+    "price": "150 - 250"
+  },
+  {
+    "name": "Thyroid Profile (T3, T4, TSH)",
+    "type": "Hormones",
+    "price": "350 - 650"
+  },
+  {
+    "name": "Vitamin D 25-Hydroxy",
+    "type": "Vitamins",
+    "price": "1100 - 1800"
+  },
+  {
+    "name": "Vitamin B12",
+    "type": "Vitamins",
+    "price": "700 - 1200"
+  },
+  {
+    "name": "C-Reactive Protein (CRP)",
+    "type": "Serology",
+    "price": "350 - 550"
+  },
+  {
+    "name": "Urine Routine Examination",
+    "type": "Urine Analysis",
+    "price": "100 - 200"
+  },
+  {
+    "name": "PSA (Prostate Specific Antigen)",
+    "type": "Tumour Markers",
+    "price": "700 - 1200"
+  },
+  {
+    "name": "Anti-Mullerian Hormone (AMH)",
+    "type": "Hormones",
+    "price": "1800 - 2800"
+  },
+  {
+    "name": "Dengue NS1 Antigen",
+    "type": "Infectious Diseases",
+    "price": "600 - 900"
+  },
+  {
+    "name": "HBsAg (Hepatitis B)",
+    "type": "Serology",
+    "price": "300 - 500"
+  },
+  {
+    "name": "Electrolytes (Sodium, Potassium, Chloride)",
+    "type": "Biochemistry",
+    "price": "450 - 650"
+  },
+  {
+    "name": "Urine Culture & Sensitivity",
+    "type": "Microbiology",
+    "price": "600 - 950"
+  }
 ]
-};
+}

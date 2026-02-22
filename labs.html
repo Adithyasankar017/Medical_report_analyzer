@@ -1,47 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Laboratories Near You</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Labs</title>
+  <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 
 <section class="list-page">
-  <h2 id="pageTitle">Labs Near You</h2>
-  <div id="labList"></div>
+  <h2>Diagnostic Labs</h2>
+  <div id="list"></div>
 </section>
 
+<script src="js/data-trivandrum.js"></script>
+<script src="js/data-kochi.js"></script>
+<script src="js/script.js"></script>
+
 <script>
-  const city = localStorage.getItem("selectedCity");
-  const area = localStorage.getItem("selectedArea");
-
-  const labData = {
-    trivandrum: {
-      kazhakoottam: [
-        { name: "MedLife Diagnostics", service: "Blood Tests", phone: "9012345678" }
-      ]
-    }
-  };
-
-  document.getElementById("pageTitle").innerText =
-    `Laboratories in ${area}, ${city}`;
-
-  const list = document.getElementById("labList");
-
-  if (labData[city] && labData[city][area]) {
-    labData[city][area].forEach(lab => {
-      const div = document.createElement("div");
-      div.className = "list-card";
-      div.innerHTML = `
-        <h4>${lab.name}</h4>
-        <p>Services: ${lab.service}</p>
-        <p>📞 ${lab.phone}</p>
-      `;
-      list.appendChild(div);
-    });
-  } else {
-    list.innerHTML = "<p>No labs found for this location.</p>";
-  }
+  loadData("labs");
 </script>
 
 </body>

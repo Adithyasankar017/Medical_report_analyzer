@@ -1,5 +1,5 @@
-function getCityData(city) {
-  if (city === "Trivandrum") return trivandrumData;
-  if (city === "Kochi") return kochiData;
-  return null;
+function getLocationTitle(type) {
+  const city = localStorage.getItem("selectedCity");
+  const area = localStorage.getItem("selectedArea");
+  return `${type} in ${area}, ${city}`;
 }
