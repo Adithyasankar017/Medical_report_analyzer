@@ -26,9 +26,10 @@ app.get("/", (req, res) => {
 // Small health / AI test endpoint to verify AI explanations without file upload
 app.get('/api/ai-test', async (req, res) => {
     try {
-        // sample parameter for quick test
-        const explanation = await getExplanation('glucose', 150, { min: 70, max: 110, unit: 'mg/dL' }, { age: 50, sex: 'male' }, 'en');
-        res.json({ ok: true, explanation });
+        // allow sessionId param for deterministic seeded testing
+        const sessionId = req.query.sessionId || null;
+        const explanation = await getExplanation('glucose', 150, { min: 70, max: 110, unit: 'mg/dL' }, { age: 50, sex: 'male', sessionId }, 'en');
+        res.json({ ok: true, sessionId: sessionId || null, explanation });
     } catch (err) {
         console.error('AI test failed:', err && err.message ? err.message : err);
         res.status(500).json({ ok: false, error: 'AI test failed', details: err && err.message ? err.message : String(err) });

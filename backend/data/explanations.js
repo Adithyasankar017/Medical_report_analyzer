@@ -16,75 +16,156 @@ function buildTemplateExplanation(name, value, range = {}, patient = {}, lang = 
     if (typeof value === 'number' && typeof max === 'number' && value > max) status = 'High';
 
     const deviation = (typeof value === 'number' && typeof min === 'number' && typeof max === 'number')
-        ? Math.round(((value - ((min + max) / 2)) / ((max - min) / 2)) * 100)
+        ? ((value - ((min + max) / 2)) / ((max - min) / 2)) * 100
         : null;
 
-    const baseEn = {
-        Normal: `Your ${name} (${value}${unit ? ' ' + unit : ''}) is within the typical range${min && max ? ` (${min} - ${max}${unit ? ' ' + unit : ''})` : ''}.`,
-        Low: `Your ${name} (${value}${unit ? ' ' + unit : ''}) is below the typical range${min && max ? ` (${min} - ${max}${unit ? ' ' + unit : ''})` : ''}.`,
-        High: `Your ${name} (${value}${unit ? ' ' + unit : ''}) is above the typical range${min && max ? ` (${min} - ${max}${unit ? ' ' + unit : ''})` : ''}.`,
+    // Deterministic seeded RNG when sessionId provided, otherwise fallback to Math.random
+    const createSeededRng = (seedStr) => {
+        // xfnv1a then mulberry32
+        const xfnv1a = function(str) {
+            for (var i = 0, h = 2166136261 >>> 0; i < str.length; i++) {
+                h = Math.imul(h ^ str.charCodeAt(i), 16777619);
+            }
+            return (h >>> 0);
+        };
+        const seed = xfnv1a(seedStr).toString();
+        let a = parseInt(seed.slice(0, 8), 10) || xfnv1a(seedStr + 'a');
+        a = a >>> 0;
+        return function() {
+            // mulberry32-ish
+            a |= 0;
+            a = a + 0x6D2B79F5 | 0;
+            var t = Math.imul(a ^ a >>> 15, 1 | a);
+            t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+            return ((t ^ t >>> 14) >>> 0) / 4294967296;
+        };
     };
 
-    const baseMl = {
-        Normal: `നിങ്ങളുടെ ${name} (${value}${unit ? ' ' + unit : ''}) സാധാരണ പരിധിക്കുള്ളിലാണ്${min && max ? ` (${min} - ${max}${unit ? ' ' + unit : ''})` : ''}.`,
-        Low: `നിങ്ങളുടെ ${name} (${value}${unit ? ' ' + unit : ''}) സാധാരണ പരിധിയേക്കാൾ കുറവാണ്${min && max ? ` (${min} - ${max}${unit ? ' ' + unit : ''})` : ''}.`,
-        High: `നിങ്ങളുടെ ${name} (${value}${unit ? ' ' + unit : ''}) സാധാരണ പരിധിയേക്കാള്‍ കൂടുതലാണ്${min && max ? ` (${min} - ${max}${unit ? ' ' + unit : ''})` : ''}.`,
+    let rng = null;
+    if (patient && patient.sessionId) {
+        try {
+            rng = createSeededRng(String(patient.sessionId) + '::' + String(name));
+        } catch (e) {
+            rng = null;
+        }
+    }
+
+    const pick = arr => {
+        if (!Array.isArray(arr) || arr.length === 0) return '';
+        if (rng) return arr[Math.floor(rng() * arr.length)];
+        return arr[Math.floor(Math.random() * arr.length)];
     };
 
-    const base = lang === 'ml' ? baseMl : baseEn;
+    // English variants
+    const opensEn = {
+        Normal: [
+            `Your ${name.replace(/_/g, ' ')} (${value}${unit ? ' ' + unit : ''}) falls within the expected range${min && max ? ` (${min} - ${max}${unit ? ' ' + unit : ''})` : ''}.`,
+            `Good news — ${name.replace(/_/g, ' ')} is ${value}${unit ? ' ' + unit : ''}, which is inside the typical reference range.`,
+            `${name.replace(/_/g, ' ')} at ${value}${unit ? ' ' + unit : ''} is considered within normal limits.`
+        ],
+        Low: [
+            `Your ${name.replace(/_/g, ' ')} (${value}${unit ? ' ' + unit : ''}) is lower than the usual range${min && max ? ` (${min} - ${max}${unit ? ' ' + unit : ''})` : ''}.`,
+            `${name.replace(/_/g, ' ')} is ${value}${unit ? ' ' + unit : ''}, which is below the expected range.`
+        ],
+        High: [
+            `Your ${name.replace(/_/g, ' ')} (${value}${unit ? ' ' + unit : ''}) is higher than expected${min && max ? ` (${min} - ${max}${unit ? ' ' + unit : ''})` : ''}.`,
+            `${name.replace(/_/g, ' ')} measures ${value}${unit ? ' ' + unit : ''}, above the typical range.`
+        ]
+    };
 
-    let personalized = '';
+    // Malayalam variants (kept concise)
+    const opensMl = {
+        Normal: [
+            `നിങ്ങളുടെ ${name} (${value}${unit ? ' ' + unit : ''}) സാധാരണ പരിധിയിലാണ്${min && max ? ` (${min} - ${max}${unit ? ' ' + unit : ''})` : ''}.`,
+            `${name} ${value}${unit ? ' ' + unit : ''} ആയി രേഖപ്പെടുത്തിയിട്ടുണ്ട്, ഇത് സാധാരണ പരിധിയിലാണ്.`
+        ],
+        Low: [
+            `നിങ്ങളുടെ ${name} (${value}${unit ? ' ' + unit : ''}) സാധാരണ പരിധിയേക്കാൾ കുറവാണ്${min && max ? ` (${min} - ${max}${unit ? ' ' + unit : ''})` : ''}.`,
+        ],
+        High: [
+            `നിങ്ങളുടെ ${name} (${value}${unit ? ' ' + unit : ''}) സാധാരണ പരിധിയേക്കാൾ കൂടുതലാണ്${min && max ? ` (${min} - ${max}${unit ? ' ' + unit : ''})` : ''}.`,
+        ]
+    };
 
-    if (age) {
-        if (age >= 65) {
-            personalized += lang === 'ml'
-                ? 'പ്രായമായ മുതിർന്നവരിൽ മൂല്യങ്ങൾ വ്യത്യാസപ്പെടാം; നിങ്ങളുടെ ഡോക്ടറുമായി സംസാരിക്കുക.'
-                : 'Values can differ in older adults; discuss with your clinician.';
-        }
-        else if (age <= 12) {
-            personalized += lang === 'ml'
-                ? 'കുട്ടികളിലെ റഫറൻസ് പരിധികൾ വ്യത്യാസപ്പെടാം; ഒരു പിഡിയാട്രിഷ്യനെ കൂടിയാലോചിക്കുക.'
-                : 'Pediatric reference ranges can differ significantly; consult a pediatrician.';
-        }
+    const opens = lang === 'ml' ? opensMl : opensEn;
+
+    // Degree phrases depend on deviation magnitude
+    const degreeEn = (dev) => {
+        if (dev === null) return pick(['Please discuss with your clinician for context.','Interpretation depends on clinical context.']);
+        const absDev = Math.abs(Math.round(dev));
+        if (absDev >= 80) return pick(['This is a marked difference from typical values and usually warrants prompt clinical review.','This large difference often needs urgent clinical attention.']);
+        if (absDev >= 30) return pick(['This is a moderate difference; follow-up testing or clinical correlation is recommended.','A moderate deviation — consider repeating the test or discussing with your clinician.']);
+        if (absDev >= 10) return pick(['This is a mild variation; monitor and correlate with any symptoms.','A small deviation; keep an eye on it and review with your doctor if symptoms appear.']);
+        return pick(['This is very close to the midpoint of the reference range and is generally not concerning.','A small, expected variation — usually not clinically significant.']);
+    };
+
+    const degreeMl = (dev) => {
+        if (dev === null) return 'വ്യാഖ്യാനം ക്ലിനിക്കൽ സാഹചര്യത്തെ ആശ്രയിച്ചിരിക്കുന്നു.';
+        const absDev = Math.abs(Math.round(dev));
+        if (absDev >= 80) return 'ഇത് വലിയ വ്യത്യാസമാണ്; ഡോക്ടറുടെ അടിയന്തര പരിശോധന ആവശ്യമാകും.';
+        if (absDev >= 30) return 'ഈ വ്യത്യാസം മിതമാണ്; തുടർന്നുള്ള പരിശോധനാ നിർദ്ദേശം ലഭിക്കാം.';
+        if (absDev >= 10) return 'ഇത് ചെറിയ വ്യത്യാസമാണ്; ലക്ഷണങ്ങൾ കാണുമെങ്കിൽ ശ്രദ്ധിക്കുക.';
+        return 'ഇത് സാധാരണപരിധിക്കുള്ളിലെ സുപ്രധാനമല്ലാത്ത വ്യത്യാസമാണ്.';
+    };
+
+    const recEn = (dev) => pick([
+        'If you have symptoms, seek medical advice; otherwise, consider repeating the test in a few weeks.',
+        'Discuss these results with your healthcare provider to decide the next steps.',
+        'No immediate action is usually required but check with your clinician for personalised guidance.'
+    ]);
+
+    const recMl = (dev) => pick([
+        'ലക്ഷണങ്ങളുണ്ടെങ്കിൽ ഡോക്ടറെ കാണുക; അല്ലെങ്കിൽ ചിലവരത്തിൽ വീണ്ടും പരിശോധന ചെയ്യുക.',
+        'ഈ ഫലങ്ങൾ നിങ്ങളുടെ ചികിത്സകനുമായി ചര്‍ച്ച ചെയ്യൂ.',
+        'സാധാരണയായി തൽപരമായ നടപടി ആവശ്യമാണ് അല്ല, പക്ഷേ വ്യക്തിഗത നിര്‍ദേശത്തിന് ഡോക്ടറെ സമീപിക്കുക.'
+    ]);
+
+    // Parameter-specific note (small heuristics)
+    const paramNoteEn = () => {
+        const key = name.toLowerCase();
+        if (key.includes('glucose') || key.includes('hba1c')) return pick(['Consider correlation with symptoms and recent meals; HbA1c gives long-term control.','Compare fasting vs post-prandial values and consider HbA1c for long-term control.']);
+        if (key.includes('hdl') || key.includes('ldl') || key.includes('chol')) return pick(['Lipid values vary with recent diet and fasting state; consider overall cardiovascular risk.','Consider discussing diet, exercise and overall lipid profile with your clinician.']);
+        if (key.includes('hemoglobin') || key.includes('hb')) return pick(['Hemoglobin can be affected by hydration, iron status, and menstrual status in females.','Consider iron studies or clinical correlation for anemia symptoms.']);
+        return '';
+    };
+
+    const paramNoteMl = () => {
+        const key = name.toLowerCase();
+        if (key.includes('glucose') || key.includes('hba1c')) return 'ഭക്ഷണസ്ഥിതിയും HbA1c പോലുള്ള ദീര്‍ഘകാല സൂചകങ്ങളും പരിശോധിക്കുക.';
+        if (key.includes('hdl') || key.includes('ldl') || key.includes('chol')) return 'ഭക്ഷണശീലിയിലും സമഗ്രമായ കാർഡിയോവാസ്‌കുലാർ റിസക്കിലും ഇത് പരിശോധിക്കുക.';
+        if (key.includes('hemoglobin') || key.includes('hb')) return 'ഹീമോഗ്ലോബിൻ തരം വഴിപാടുകൾ അയവാകാം; അയർൺ സ്ഥിതി പരിശോധിക്കുക.';
+        return '';
+    };
+
+    const openSentence = pick(opens[status]);
+    const degreeSentence = lang === 'ml' ? degreeMl(deviation) : degreeEn(deviation);
+    const paramSentence = lang === 'ml' ? paramNoteMl() : paramNoteEn();
+    const recSentence = lang === 'ml' ? pick(recMl(deviation)) : recEn(deviation);
+
+    // Occasionally add an age/sex contextual sentence
+    let contextSentence = '';
+    if (age && Math.random() < 0.4) {
+        contextSentence = lang === 'ml'
+            ? (age >= 65 ? 'മുതിര്‍ന്നവർക്കായി റഫറൻസ് മൂല്യങ്ങൾ വ്യത്യാസപ്പെടാം.' : (age <= 12 ? 'കുട്ടികളിൽ റഫറൻസ് വ്യത്യാസപ്പെടാം.' : 'പ്രായം ഫലങ്ങൾ പ്രകാരമുള്ളപ്പോൾ പ്രാധാന്യം വഹിക്കും.'))
+            : (age >= 65 ? 'Reference ranges can differ in older adults.' : (age <= 12 ? 'Pediatric ranges may differ.' : 'Age can influence interpretation.'));
     }
 
-    if (sex) {
-        if (sex === 'female' && name.toLowerCase().includes('hemoglobin')) {
-            personalized += (personalized ? ' ' : '') + (lang === 'ml'
-                ? 'സ്ത്രീകളിൽ ഹെമോഗ്ലോബിൻ സാധാരണയായി കുറവായിരിക്കും.'
-                : 'Females often have slightly lower hemoglobin than males.');
-        }
-    }
+    // Build the final explanation with gentle variation
+    const parts = [openSentence];
+    if (paramSentence) parts.push(paramSentence);
+    parts.push(degreeSentence);
+    if (contextSentence) parts.push(contextSentence);
+    parts.push(recSentence);
 
-    if (deviation !== null) {
-        const absDev = Math.abs(deviation);
-        if (absDev >= 80) {
-            personalized += (personalized ? ' ' : '') + (lang === 'ml'
-                ? 'ഇത് വലിയ വ്യതിയാനമാണ്; അടിയന്തിരമായി ക്ലിനിക്കൽ വിലയിരുത്തൽ ആവശ്യമാണ്.'
-                : 'This is a large deviation and usually requires prompt clinical review.');
-        }
-        else if (absDev >= 30) {
-            personalized += (personalized ? ' ' : '') + (lang === 'ml'
-                ? 'ഈ വ്യതിയാനം മിതമാണ്; പിന്തുടർച്ചാ പരിശോധന ശുപാർശ ചെയ്യപ്പെടും.'
-                : 'This deviation is moderate; follow-up testing or clinical correlation is recommended.');
-        }
-        else if (absDev >= 10) {
-            personalized += (personalized ? ' ' : '') + (lang === 'ml'
-                ? 'സൂക്ഷ്മ വ്യതിയാനമാണ്; ലക്ഷണങ്ങളെ ശ്രദ്ധിക്കുക.'
-                : 'This is a mild deviation; monitor and correlate with symptoms.');
-        }
-    }
-
-    if (!personalized) {
-        personalized = lang === 'ml'
-            ? 'വ്യാഖ്യാനം ക്ലിനിക്കൽ സാഹചര്യത്തെ ആശ്രയിച്ചിരിക്കുന്നു; ദയവായി നിങ്ങളുടെ ആരോഗ്യ സേവനദാതാവുമായി ചര്‍ച്ച ചെയ്യുക.'
-            : 'Interpretation depends on clinical context; discuss results with your healthcare provider.';
-    }
-
-    return `${base[status]} ${personalized}`;
+    return parts.filter(Boolean).join(' ');
 }
 
 async function getExplanation(name, value, range = {}, patient = {}, lang = 'en') {
+    // If environment forces local explanations, skip OpenAI
+    if (process.env.LOCAL_ONLY_EXPLANATIONS === 'true') {
+        return buildTemplateExplanation(name, value, range, patient, lang);
+    }
+
     // If OpenAI SDK is available and API key set, prefer AI-generated explanation
     try {
         const apiKey = process.env.OPENAI_API_KEY || null;

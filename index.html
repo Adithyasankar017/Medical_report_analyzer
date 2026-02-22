@@ -138,6 +138,14 @@
       if (age) formData.append("age", age);
       if (sex) formData.append("sex", sex);
       formData.append("lang", lang);
+      // Ensure a deterministic session id per user so explanations can be consistent
+      let sessionId = sessionStorage.getItem('userSessionId');
+      if (!sessionId) {
+        if (window.crypto && crypto.randomUUID) sessionId = crypto.randomUUID();
+        else sessionId = 'sid-' + Date.now() + '-' + Math.floor(Math.random()*1e9);
+        sessionStorage.setItem('userSessionId', sessionId);
+      }
+      formData.append('sessionId', sessionId);
 
       const statusDiv = document.getElementById("uploadStatus");
       statusDiv.innerHTML = "<p style='text-align: center; font-size: 16px; color: #4c6fff;'>🔄 Analyzing report... Please wait ⏳</p>";
