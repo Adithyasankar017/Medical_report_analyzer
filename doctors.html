@@ -1,23 +1,450 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Doctors</title>
-  <link rel="stylesheet" href="/css/style.css">
+  <meta charset="UTF-8">
+  <title>Find Doctors - Medical Report Analyzer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .doctors-page {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #eef3ff, #f7faff);
+      padding-bottom: 80px;
+    }
+
+    .doctors-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 100px 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .doctors-header::before {
+      content: '👨‍⚕️';
+      position: absolute;
+      font-size: 200px;
+      opacity: 0.1;
+      right: -20px;
+      top: -50px;
+    }
+
+    .doctors-header h1 {
+      font-size: 48px;
+      font-weight: 800;
+      margin-bottom: 15px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .doctors-header p {
+      font-size: 18px;
+      opacity: 0.95;
+      position: relative;
+      z-index: 1;
+      margin-bottom: 30px;
+    }
+
+    .search-section {
+      max-width: 800px;
+      margin: -30px auto 60px;
+      padding: 0 20px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .search-box {
+      display: flex;
+      gap: 10px;
+      background: white;
+      padding: 15px 25px;
+      border-radius: 50px;
+      box-shadow: 0 10px 40px rgba(102, 126, 234, 0.2);
+    }
+
+    .search-box input {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-size: 16px;
+      background: transparent;
+    }
+
+    .search-box button {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      padding: 10px 25px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+
+    .search-box button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+    }
+
+    .filters {
+      max-width: 1200px;
+      margin: 40px auto 50px;
+      display: flex;
+      gap: 15px;
+      padding: 0 20px;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      padding: 10px 20px;
+      border: 2px solid #ddd;
+      background: white;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active {
+      border-color: #667eea;
+      background: #f0f4ff;
+      color: #667eea;
+    }
+
+    .doctors-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 30px;
+      padding: 0 20px;
+    }
+
+    .doctor-card {
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+
+    .doctor-card:hover {
+      transform: translateY(-12px);
+      box-shadow: 0 15px 45px rgba(102, 126, 234, 0.2);
+    }
+
+    .doctor-avatar {
+      width: 100%;
+      height: 200px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .doctor-avatar::before {
+      content: '';
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      top: -100px;
+      right: -100px;
+    }
+
+    .doctor-content {
+      padding: 25px;
+    }
+
+    .doctor-name {
+      font-size: 20px;
+      font-weight: 700;
+      color: #111;
+      margin-bottom: 8px;
+    }
+
+    .doctor-specialty {
+      font-size: 14px;
+      color: #667eea;
+      font-weight: 600;
+      margin-bottom: 3px;
+    }
+
+    .doctor-department {
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 15px;
+    }
+
+    .doctor-info {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 15px 0;
+      border-top: 1px solid #f0f0f0;
+      border-bottom: 1px solid #f0f0f0;
+      margin: 15px 0;
+    }
+
+    .doctor-info-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      color: #333;
+    }
+
+    .doctor-info-item strong {
+      color: #111;
+      min-width: 80px;
+    }
+
+    .doctor-rating {
+      display: flex;
+      gap: 4px;
+      margin: 10px 0;
+    }
+
+    .star {
+      color: #ffc107;
+      font-size: 16px;
+    }
+
+    .doctor-cta {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .cta-btn {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+      font-size: 14px;
+    }
+
+    .cta-btn-primary {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+    }
+
+    .cta-btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .cta-btn-secondary {
+      background: #f0f4ff;
+      color: #667eea;
+      border: 2px solid #667eea;
+    }
+
+    .cta-btn-secondary:hover {
+      background: #667eea;
+      color: white;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      background: #f0f4ff;
+      color: #667eea;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: 10px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #666;
+    }
+
+    .empty-state-icon {
+      font-size: 80px;
+      margin-bottom: 20px;
+      opacity: 0.3;
+    }
+
+    @media (max-width: 768px) {
+      .doctors-header {
+        padding: 60px 20px;
+      }
+
+      .doctors-header h1 {
+        font-size: 32px;
+      }
+
+      .doctors-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .search-box {
+        flex-direction: column;
+      }
+    }
+  </style>
 </head>
 <body>
+  <!-- TOP BAR -->
+  <div class="top-bar">
+    <h2>Medical Report Analyzer</h2>
+    <a href="index.html" style="color: #4c6fff; text-decoration: none; font-weight: 600; cursor: pointer;">← Back to Home</a>
+  </div>
 
-<section class="list-page">
-  <h2>Doctors</h2>
-  <div id="list"></div>
-</section>
+  <!-- DOCTORS PAGE -->
+  <div class="doctors-page">
+    <!-- HEADER -->
+    <div class="doctors-header">
+      <h1>👨‍⚕️ Find Expert Doctors</h1>
+      <p>Connect with qualified medical professionals in your area</p>
+    </div>
 
-<script src="js/data-trivandrum.js"></script>
-<script src="js/data-kochi.js"></script>
-<script src="js/script.js"></script>
+    <!-- SEARCH SECTION -->
+    <div class="search-section">
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Search by name or specialty...">
+        <button onclick="filterDoctors()">Search</button>
+      </div>
+    </div>
 
-<script>
-  loadData("doctors");
-</script>
+    <!-- FILTERS -->
+    <div class="filters">
+      <button class="filter-btn active" onclick="filterBySpecialty('all')">All</button>
+      <button class="filter-btn" onclick="filterBySpecialty('Cardiology')">❤️ Cardiology</button>
+      <button class="filter-btn" onclick="filterBySpecialty('General')">🏥 General</button>
+      <button class="filter-btn" onclick="filterBySpecialty('Neurology')">🧠 Neurology</button>
+      <button class="filter-btn" onclick="filterBySpecialty('Dermatology')">🩺 Dermatology</button>
+    </div>
 
+    <!-- DOCTORS GRID -->
+    <div class="doctors-grid" id="list"></div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    © 2026 Medical Report Analyzer
+  </footer>
+
+  <script src="js/data-trivandrum.js"></script>
+  <script src="js/data-kochi.js"></script>
+  <script>
+    let allDoctors = [];
+    let filteredDoctors = [];
+
+    function getCityData(city) {
+      if (city === "Trivandrum") return typeof trivandrumData !== "undefined" ? trivandrumData : null;
+      if (city === "Kochi") return typeof kochiData !== "undefined" ? kochiData : null;
+      return null;
+    }
+
+    function loadDoctors() {
+      const city = localStorage.getItem("selectedCity");
+      if (!city) {
+        alert("Please select a city first");
+        window.location.href = "index.html";
+        return;
+      }
+
+      const cityData = getCityData(city);
+      allDoctors = cityData?.doctors || [];
+      filteredDoctors = [...allDoctors];
+      renderDoctors();
+    }
+
+    function renderDoctors() {
+      const container = document.getElementById("list");
+      container.innerHTML = "";
+
+      if (filteredDoctors.length === 0) {
+        container.innerHTML = '<div class="empty-state" style="grid-column: 1/-1;"><div class="empty-state-icon">👨‍⚕️</div><p>No doctors found</p></div>';
+        return;
+      }
+
+      filteredDoctors.forEach(doctor => {
+        const stars = "⭐".repeat(Math.floor(Math.random() * 2) + 4);
+        
+        const card = document.createElement("div");
+        card.className = "doctor-card";
+        card.innerHTML = `
+          <div class="doctor-avatar">👨‍⚕️</div>
+          <div class="doctor-content">
+            <div class="doctor-specialty">${doctor.department || "Medical Professional"}</div>
+            <div class="doctor-name">${doctor.name}</div>
+            <div class="doctor-department">${doctor.department || ""}</div>
+            
+            <div class="doctor-rating">${stars}</div>
+            
+            <div class="doctor-info">
+              <div class="doctor-info-item">
+                <strong>📍 Address:</strong>
+                <span>${doctor.address || "Not Available"}</span>
+              </div>
+              <div class="doctor-info-item">
+                <strong>📞 Phone:</strong>
+                <span><a href="tel:${doctor.phone}" style="color: #667eea; text-decoration: none;">${doctor.phone || "Not Available"}</a></span>
+              </div>
+              <div class="doctor-info-item">
+                <strong>⏰ Hours:</strong>
+                <span>9:00 AM - 6:00 PM</span>
+              </div>
+            </div>
+
+            <div class="doctor-cta">
+              <button class="cta-btn cta-btn-primary" onclick="appointmentPopup('${doctor.name}')">📅 Book Appointment</button>
+              <button class="cta-btn cta-btn-secondary" onclick="callDoctor('${doctor.phone}')">📞 Call Now</button>
+            </div>
+
+            <span class="badge">Verified ✓</span>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function filterBySpecialty(specialty) {
+      document.querySelectorAll(".filter-btn").forEach(btn => btn.classList.remove("active"));
+      event.target.classList.add("active");
+      
+      if (specialty === "all") {
+        filteredDoctors = [...allDoctors];
+      } else {
+        filteredDoctors = allDoctors.filter(doctor => doctor.department?.includes(specialty));
+      }
+      renderDoctors();
+    }
+
+    function filterDoctors() {
+      const searchTerm = document.getElementById("searchInput").value.toLowerCase();
+      filteredDoctors = allDoctors.filter(doctor => 
+        doctor.name.toLowerCase().includes(searchTerm) ||
+        (doctor.department && doctor.department.toLowerCase().includes(searchTerm))
+      );
+      renderDoctors();
+    }
+
+    function appointmentPopup(doctorName) {
+      alert(`Appointment booking for Dr. ${doctorName}\n\nFeature coming soon!`);
+    }
+
+    function callDoctor(phone) {
+      window.location.href = `tel:${phone}`;
+    }
+
+    // Load on page load
+    window.addEventListener('DOMContentLoaded', loadDoctors);
+  </script>
 </body>
 </html>

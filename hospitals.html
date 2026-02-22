@@ -1,23 +1,76 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Hospitals</title>
-  <link rel="stylesheet" href="/css/style.css">
+  <meta charset="UTF-8">
+  <title>Find Hospitals - Medical Report Analyzer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .hospitals-page { min-height: 100vh; background: linear-gradient(135deg, #eef3ff, #f7faff); padding-bottom: 80px; }
+    .hospitals-header { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 100px 40px; text-align: center; position: relative; overflow: hidden; }
+    .hospitals-header::before { content: '🏥'; position: absolute; font-size: 200px; opacity: 0.1; right: -20px; top: -50px; }
+    .hospitals-header h1 { font-size: 48px; font-weight: 800; margin-bottom: 15px; position: relative; z-index: 1; }
+    .hospitals-header p { font-size: 18px; opacity: 0.95; position: relative; z-index: 1; margin-bottom: 30px; }
+    .search-section { max-width: 800px; margin: -30px auto 60px; padding: 0 20px; position: relative; z-index: 10; }
+    .search-box { display: flex; gap: 10px; background: white; padding: 15px 25px; border-radius: 50px; box-shadow: 0 10px 40px rgba(245, 87, 108, 0.2); }
+    .search-box input { flex: 1; border: none; outline: none; font-size: 16px; background: transparent; }
+    .search-box button { background: linear-gradient(135deg, #f093fb, #f5576c); color: white; border: none; padding: 10px 25px; border-radius: 25px; cursor: pointer; font-weight: 600; transition: 0.3s; }
+    .search-box button:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(245, 87, 108, 0.3); }
+    .hospitals-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 30px; padding: 0 20px; }
+    .hospital-card { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    .hospital-card:hover { transform: translateY(-12px); box-shadow: 0 15px 45px rgba(245, 87, 108, 0.2); }
+    .hospital-banner { width: 100%; height: 180px; background: linear-gradient(135deg, #f093fb, #f5576c); display: flex; align-items: center; justify-content: center; font-size: 80px; position: relative; overflow: hidden; }
+    .hospital-banner::before { content: ''; position: absolute; width: 300px; height: 300px; background: rgba(255, 255, 255, 0.1); border-radius: 50%; top: -100px; right: -100px; }
+    .hospital-rating-badge { position: absolute; top: 15px; right: 15px; background: #fff; padding: 8px 14px; border-radius: 20px; font-weight: 700; color: #f5576c; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); }
+    .hospital-content { padding: 25px; }
+    .hospital-name { font-size: 21px; font-weight: 700; color: #111; margin-bottom: 5px; }
+    .hospital-type { font-size: 13px; color: #f5576c; font-weight: 600; margin-bottom: 15px; }
+    .hospital-details { display: flex; flex-direction: column; gap: 12px; padding: 15px 0; border-top: 1px solid #f0f0f0; border-bottom: 1px solid #f0f0f0; margin: 15px 0; }
+    .detail-item { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; color: #333; }
+    .detail-item strong { color: #111; min-width: 70px; }
+    .hospital-facilities { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+    .facility-badge { background: #fff0f5; color: #f5576c; padding: 5px 12px; border-radius: 15px; font-size: 12px; font-weight: 600; }
+    .hospital-actions { display: flex; gap: 10px; margin-top: 15px; }
+    .action-btn { flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.3s; font-size: 14px; }
+    .action-btn-primary { background: linear-gradient(135deg, #f093fb, #f5576c); color: white; }
+    .action-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(245, 87, 108, 0.3); }
+    .action-btn-secondary { background: #fff0f5; color: #f5576c; border: 2px solid #f5576c; }
+    .action-btn-secondary:hover { background: #f5576c; color: white; }
+    .empty-state { text-align: center; padding: 60px 20px; color: #666; grid-column: 1/-1; }
+    .empty-state-icon { font-size: 80px; margin-bottom: 20px; opacity: 0.3; }
+    @media (max-width: 768px) { .hospitals-header { padding: 60px 20px; } .hospitals-header h1 { font-size: 32px; } .hospitals-grid { grid-template-columns: 1fr; } }
+  </style>
 </head>
 <body>
-
-<section class="list-page">
-  <h2>Hospitals</h2>
-  <div id="list"></div>
-</section>
-
-<script src="js/data-kochi.js"></script>
-<script src="js/data-trivandrum.js"></script>
-<script src="js/script.js"></script>
-
-<script>
-  loadData("hospitals");
-</script>
-
+  <div class="top-bar">
+    <h2>Medical Report Analyzer</h2>
+    <a href="index.html" style="color: #f5576c; text-decoration: none; font-weight: 600; cursor: pointer;">← Back to Home</a>
+  </div>
+  <div class="hospitals-page">
+    <div class="hospitals-header">
+      <h1>🏥 Find Hospitals & Clinics</h1>
+      <p>Access top-rated healthcare facilities near you</p>
+    </div>
+    <div class="search-section">
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Search hospitals by name...">
+        <button onclick="searchHospitals()">Search</button>
+      </div>
+    </div>
+    <div class="hospitals-grid" id="list"></div>
+  </div>
+  <footer>
+    © 2026 Medical Report Analyzer
+  </footer>
+  <script src="js/data-trivandrum.js"></script>
+  <script src="js/data-kochi.js"></script>
+  <script>
+    let allHospitals = [];
+    function getCityData(city) { if (city === "Trivandrum") return typeof trivandrumData !== "undefined" ? trivandrumData : null; if (city === "Kochi") return typeof kochiData !== "undefined" ? kochiData : null; return null; }
+    function loadHospitals() { const city = localStorage.getItem("selectedCity"); if (!city) { alert("Please select a city first"); window.location.href = "index.html"; return; } const cityData = getCityData(city); allHospitals = cityData?.hospitals || []; renderHospitals(); }
+    function renderHospitals() { const container = document.getElementById("list"); container.innerHTML = ""; if (allHospitals.length === 0) { container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🏥</div><p>No hospitals found</p></div>'; return; } allHospitals.forEach(hospital => { const rating = (Math.random() * 1 + 4).toFixed(1); const card = document.createElement("div"); card.className = "hospital-card"; card.innerHTML = `<div class="hospital-banner">🏥<div class="hospital-rating-badge">⭐ ${rating}</div></div><div class="hospital-content"><div class="hospital-name">${hospital.name}</div><div class="hospital-type">Multi-specialty Hospital</div><div class="hospital-details"><div class="detail-item"><strong>📍</strong><span>${hospital.address || "Not Available"}</span></div><div class="detail-item"><strong>📞</strong><span><a href="tel:${hospital.phone}" style="color: #f5576c; text-decoration: none;">${hospital.phone || "Not Available"}</a></span></div><div class="detail-item"><strong>⏰</strong><span>24/7 Open</span></div></div><div class="hospital-facilities"><span class="facility-badge">ER</span><span class="facility-badge">ICU</span><span class="facility-badge">Lab</span></div><div class="hospital-actions"><button class="action-btn action-btn-primary" onclick="bookAppointment('${hospital.name}')">📅 Book</button><button class="action-btn action-btn-secondary" onclick="alert('Directions!')">🗺️ Map</button></div></div>`; container.appendChild(card); }); }
+    function bookAppointment(name) { alert(`Booking for ${name}!`); }
+    window.addEventListener('DOMContentLoaded', loadHospitals);
+  </script>
 </body>
 </html>

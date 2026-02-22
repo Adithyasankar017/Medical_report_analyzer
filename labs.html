@@ -1,23 +1,60 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Labs</title>
-  <link rel="stylesheet" href="/css/style.css">
+  <meta charset="UTF-8">
+  <title>Find Labs - Medical Report Analyzer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .labs-page { min-height: 100vh; background: linear-gradient(135deg, #eef3ff, #f7faff); padding-bottom: 80px; }
+    .labs-header { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; padding: 100px 40px; text-align: center; position: relative; overflow: hidden; }
+    .labs-header::before { content: '🧪'; position: absolute; font-size: 200px; opacity: 0.1; right: -20px; top: -50px; }
+    .labs-header h1 { font-size: 48px; font-weight: 800; margin-bottom: 15px; position: relative; z-index: 1; }
+    .labs-header p { font-size: 18px; opacity: 0.95; position: relative; z-index: 1; }
+    .labs-grid { max-width: 1200px; margin: 60px auto 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; padding: 0 20px; }
+    .lab-card { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    .lab-card:hover { transform: translateY(-12px); box-shadow: 0 15px 45px rgba(79, 172, 254, 0.2); }
+    .lab-header { width: 100%; background: linear-gradient(135deg, #4facfe, #00f2fe); padding: 40px 20px; text-align: center; }
+    .lab-icon { font-size: 60px; margin-bottom: 10px; }
+    .lab-name { font-size: 20px; font-weight: 700; color: white; }
+    .lab-content { padding: 25px; }
+    .lab-info { display: flex; flex-direction: column; gap: 12px; }
+    .info-row { display: flex; gap: 10px; font-size: 14px; }
+    .info-row strong { color: #00f2fe; min-width: 80px; }
+    .tests-available { background: #f0f9ff; padding: 12px; border-radius: 8px; margin: 12px 0; }
+    .tests-available strong { color: #00f2fe; }
+    .test-list { font-size: 13px; color: #333; margin-top: 8px; line-height: 1.6; }
+    .lab-cta { display: flex; gap: 10px; margin-top: 15px; }
+    .lab-btn { flex: 1; padding: 11px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.3s; font-size: 14px; }
+    .lab-btn-primary { background: linear-gradient(135deg, #4facfe, #00f2fe); color: white; }
+    .lab-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(79, 172, 254, 0.3); }
+    .lab-btn-secondary { background: #f0f9ff; color: #00f2fe; border: 2px solid #00f2fe; }
+    .lab-btn-secondary:hover { background: #00f2fe; color: white; }
+    @media (max-width: 768px) { .labs-header { padding: 60px 20px; } .labs-header h1 { font-size: 32px; } }
+  </style>
 </head>
 <body>
-
-<section class="list-page">
-  <h2>Diagnostic Labs</h2>
-  <div id="list"></div>
-</section>
-
-<script src="js/data-trivandrum.js"></script>
-<script src="js/data-kochi.js"></script>
-<script src="js/script.js"></script>
-
-<script>
-  loadData("labs");
-</script>
-
+  <div class="top-bar">
+    <h2>Medical Report Analyzer</h2>
+    <a href="index.html" style="color: #00f2fe; text-decoration: none; font-weight: 600; cursor: pointer;">← Back to Home</a>
+  </div>
+  <div class="labs-page">
+    <div class="labs-header">
+      <h1>🧪 Diagnostic Labs</h1>
+      <p>Book your tests at trusted diagnostic centers</p>
+    </div>
+    <div class="labs-grid" id="list"></div>
+  </div>
+  <footer>© 2026 Medical Report Analyzer</footer>
+  <script src="js/data-trivandrum.js"></script>
+  <script src="js/data-kochi.js"></script>
+  <script>
+    let allLabs = [];
+    function getCityData(city) { if (city === "Trivandrum") return typeof trivandrumData !== "undefined" ? trivandrumData : null; if (city === "Kochi") return typeof kochiData !== "undefined" ? kochiData : null; return null; }
+    function loadLabs() { const city = localStorage.getItem("selectedCity"); if (!city) { alert("Please select a city first"); window.location.href = "index.html"; return; } const cityData = getCityData(city); allLabs = cityData?.labs || []; renderLabs(); }
+    function renderLabs() { const container = document.getElementById("list"); container.innerHTML = ""; if (allLabs.length === 0) { container.innerHTML = '<div style="text-align:center;padding:60px;grid-column:1/-1;"><div style="font-size:80px;opacity:0.3;">🧪</div><p>No labs found</p></div>'; return; } allLabs.forEach(lab => { const card = document.createElement("div"); card.className = "lab-card"; card.innerHTML = `<div class="lab-header"><div class="lab-icon">🧪</div><div class="lab-name">${lab.name}</div></div><div class="lab-content"><div class="lab-info"><div class="info-row"><strong>📍</strong><span>${lab.address || "Not Available"}</span></div><div class="info-row"><strong>📞</strong><span><a href="tel:${lab.phone}" style="color:#00f2fe;text-decoration:none;">${lab.phone || "N/A"}</a></span></div><div class="info-row"><strong>⏰</strong><span>${lab.hours || "9 AM - 6 PM"}</span></div></div><div class="tests-available"><strong>Popular Tests:</strong><div class="test-list">• CBC • Thyroid Panel • Lipid Profile • Vitamin D</div></div><div class="lab-cta"><button class="lab-btn lab-btn-primary" onclick="bookTest('${lab.name}')">🔬 Book Test</button><button class="lab-btn lab-btn-secondary" onclick="alert('Home collection!')">🏠 Home</button></div></div>`; container.appendChild(card); }); }
+    function bookTest(name) { alert(`Booking tests at ${name}!`); }
+    window.addEventListener('DOMContentLoaded', loadLabs);
+  </script>
 </body>
 </html>

@@ -1,23 +1,25 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Medical Tests</title>
-  <link rel="stylesheet" href="/css/style.css">
-</head>
-<body>
-
-<section class="list-page">
-  <h2>Medical Tests & Approximate Prices</h2>
-  <div id="list"></div>
-</section>
-
-<script src="js/data-trivandrum.js"></script>
-<script src="js/data-kochi.js"></script>
-<script src="js/script.js"></script>
-
-<script>
-  loadData("tests");
-</script>
-
-</body>
-</html>
+  <meta charset="UTF-8">
+  <title>Medical Tests - Medical Report Analyzer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .tests-page { min-height: 100vh; background: linear-gradient(135deg, #eef3ff, #f7faff); padding-bottom: 80px; }
+    .tests-header { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); color: white; padding: 100px 40px; text-align: center; position: relative; overflow: hidden; }
+    .tests-header::before { content: '📋'; position: absolute; font-size: 200px; opacity: 0.1; right: -20px; top: -50px; }
+    .tests-header h1 { font-size: 48px; font-weight: 800; margin-bottom: 15px; position: relative; z-index: 1; }
+    .tests-header p { font-size: 18px; opacity: 0.95; position: relative; z-index: 1; }
+    .categories-section { max-width: 1200px; margin: 60px auto; padding: 0 20px; }
+    .category { margin-bottom: 60px; }
+    .category-title { font-size: 28px; font-weight: 700; margin-bottom: 25px; color: #111; display: flex; align-items: center; gap: 12px; }
+    .tests-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+    .test-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.06); transition: all 0.3s; border-left: 5px solid #fa709a; }
+    .test-card:hover { transform: translateY(-8px); box-shadow: 0 12px 30px rgba(250, 112, 154, 0.15); }
+    .test-name { font-size: 17px; font-weight: 700; color: #111; margin-bottom: 8px; }
+    .test-type { font-size: 12px; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 12px; }
+    .test-price { font-size: 20px; font-weight: 700; color: #fa709a; margin: 12px 0; }
+    .test-action { width: 100%; padding: 10px; background: linear-gradient(135deg, #fa709a, #fee140); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.3s; margin-top: 15px; }
+    .test-action:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(250, 112, 154, 0.3); }
+    @media (max-width: 768px) { .tests-header { padding: 60px 20px; } .tests-header h1 { font-size: 32px; } }\n  </style>\n</head>\n<body>\n  <div class=\"top-bar\">\n    <h2>Medical Report Analyzer</h2>\n    <a href=\"index.html\" style=\"color: #fa709a; text-decoration: none; font-weight: 600; cursor: pointer;\">← Back to Home</a>\n  </div>\n  <div class=\"tests-page\">\n    <div class=\"tests-header\">\n      <h1>📋 Medical Tests & Packages</h1>\n      <p>Comprehensive diagnostic tests for every health need</p>\n    </div>\n    <div class=\"categories-section\" id=\"testsContainer\"></div>\n  </div>\n  <footer>\n    © 2026 Medical Report Analyzer\n  </footer>\n  <script src=\"js/data-trivandrum.js\"></script>\n  <script src=\"js/data-kochi.js\"></script>\n  <script>\n    let allTests = [];\n    function getCityData(city) { if (city === \"Trivandrum\") return typeof trivandrumData !== \"undefined\" ? trivandrumData : null; if (city === \"Kochi\") return typeof kochiData !== \"undefined\" ? kochiData : null; return null; }\n    function loadTests() { const city = localStorage.getItem(\"selectedCity\"); if (!city) { alert(\"Please select a city first\"); window.location.href = \"index.html\"; return; } const cityData = getCityData(city); allTests = cityData?.tests || []; renderTests(); }\n    function renderTests() { const container = document.getElementById(\"testsContainer\"); container.innerHTML = \"\"; if (allTests.length === 0) { container.innerHTML = '<div style=\"text-align:center;padding:60px;\"><div style=\"font-size:80px;opacity:0.3;margin-bottom:20px;\">📋</div><p>No tests available</p></div>'; return; } const categories = {}; allTests.forEach(test => { const cat = test.type || \"General\"; if (!categories[cat]) categories[cat] = []; categories[cat].push(test); }); Object.entries(categories).forEach(([cat, tests]) => { const html = `<div class=\"category\"><h2 class=\"category-title\">${getCategoryIcon(cat)} ${cat}</h2><div class=\"tests-grid\">${tests.map(test => `<div class=\"test-card\"><div class=\"test-name\">${test.name}</div><div class=\"test-type\">${test.type}</div><div class=\"test-price\">₹${test.price}</div><button class=\"test-action\" onclick=\"bookTest('${test.name}', ${test.price})\">🛒 Book Test</button></div>`).join('')}</div></div>`; container.innerHTML += html; }); }\n    function getCategoryIcon(cat) { const icons = { \"Blood\": \"🩸\", \"Urine\": \"🧪\", \"Imaging\": \"🖼️\", \"Package\": \"📦\", \"General\": \"📋\" }; return icons[cat] || \"📋\"; }\n    function bookTest(name, price) { alert(`Booked: ${name} (₹${price})\\n\\nProceeding to checkout!`); }\n    window.addEventListener('DOMContentLoaded', loadTests);\n  </script>\n</body>\n</html>\n

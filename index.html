@@ -139,8 +139,8 @@
       if (sex) formData.append("sex", sex);
       formData.append("lang", lang);
 
-      const resultDiv = document.getElementById("result");
-      resultDiv.innerHTML = "<p style='text-align: center; font-size: 18px;'>🏥 Analyzing report... Please wait ⏳</p>";
+      const statusDiv = document.getElementById("uploadStatus");
+      statusDiv.innerHTML = "<p style='text-align: center; font-size: 16px; color: #4c6fff;'>🔄 Analyzing report... Please wait ⏳</p>";
 
       try {
 
@@ -157,63 +157,18 @@
         const data = await response.json();
         
         if (data.message) {
-          resultDiv.innerHTML = "<p style='text-align: center; font-size: 16px;'>" + data.message + "</p>";
+          statusDiv.innerHTML = "<p style='text-align: center; font-size: 16px; color: #f39c12;'>⚠️ " + data.message + "</p>";
           return;
         }
 
-        displayResults(data.detectedParameters || []);
+        // Store results in sessionStorage and navigate to results page
+        sessionStorage.setItem('analysisResults', JSON.stringify(data.detectedParameters || []));
+        window.location.href = 'results.html';
 
       } catch (error) {
-        resultDiv.innerHTML = "<p style='color: red; text-align: center;'><strong>Error:</strong> " + error.message + "</p>";
+        statusDiv.innerHTML = "<p style='color: #e74c3c; text-align: center;'><strong>❌ Error:</strong> " + error.message + "</p>";
         console.error(error);
       }
-    }
-
-    function displayResults(results) {
-
-      const resultDiv = document.getElementById("result");
-
-      if (!results || results.length === 0) {
-        resultDiv.innerHTML = "<p style='text-align: center;'>No medical parameters detected.</p>";
-        return;
-      }
-
-      let html = "<h2>📊 Analysis Results</h2>";
-
-      results.forEach(item => {
-
-        let statusColor = "#27ae60"; // Green for Normal
-        let statusEmoji = "✅";
-        
-        if (item.status === "Low") {
-          statusColor = "#f39c12"; // Orange/Amber
-          statusEmoji = "⬇️";
-        } else if (item.status === "High") {
-          statusColor = "#e74c3c"; // Red
-          statusEmoji = "⬆️";
-        }
-
-        html += `
-          <div class="result-card" style="border-left: 5px solid ${statusColor};">
-            <h3>${item.name.replace(/_/g, ' ').toUpperCase()}</h3>
-            <p><strong>Value:</strong> ${item.value} ${item.unit || ""}</p>
-            <p><strong>Normal Range:</strong> ${item.normalRange}</p>
-            <p><strong>Status:</strong> 
-              <span style="color:${statusColor}; font-weight:bold;">
-                ${statusEmoji} ${item.status}
-              </span>
-            </p>
-            <p style="background-color: #f8f9fa; padding: 12px; border-radius: 5px; margin: 10px 0;">
-              <strong>Explanation:</strong><br>${item.explanation}
-            </p>
-            <p class="disclaimer" style="font-size: 12px; color: #7f8c8d; margin-top: 10px;">
-              ⚠️ This analysis is AI-generated and not a substitute for professional medical diagnosis. Always consult your healthcare provider.
-            </p>
-          </div>
-        `;
-      });
-
-      resultDiv.innerHTML = html;
     }
   </script>
 
