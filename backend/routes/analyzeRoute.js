@@ -152,7 +152,7 @@ router.post("/analyze", upload.single("file"), async (req, res) => {
         const sex = req.body.sex ? req.body.sex : null;
         const lang = req.body.lang || 'en'; // Default to English; accepts 'en' or 'ml' for Malayalam
 
-        const analysis = parameters.map(param => {
+        const analysis = await Promise.all(parameters.map(async (param) => {
             const range = medicalRanges[param.name];
             if (!range) return { name: param.name, value: param.value };
 
@@ -160,7 +160,7 @@ router.post("/analyze", upload.single("file"), async (req, res) => {
             if (param.value < range.min) status = "Low";
             if (param.value > range.max) status = "High";
 
-            const explanation = getExplanation(param.name, param.value, range, { age, sex }, lang);
+            const explanation = await getExplanation(param.name, param.value, range, { age, sex }, lang);
 
             return {
                 name: param.name,
@@ -170,7 +170,7 @@ router.post("/analyze", upload.single("file"), async (req, res) => {
                 status,
                 explanation
             };
-        });
+        }));
 
         res.json({ detectedParameters: analysis });
 
