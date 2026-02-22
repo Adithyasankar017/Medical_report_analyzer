@@ -1,6 +1,90 @@
 const trivandrumData = {
   doctors: [
   {
+    "name": "Dr. Vipin Nair V",
+    "department": "General Medicine",
+    "address": "Neyyar Medicity, Neyyattinkara, Trivandrum",
+    "phone": "04712525777"
+},
+{
+    "name": "Dr. Shalini",
+    "department": "General Medicine",
+    "address": "Gowreesha Hospital, Gowrishahapattom, Pattom, Trivandrum",
+    "phone": "04712444415"
+},
+  {
+    "name": "Dr. Sujamol Jacob",
+    "department": "Obstetrics and Gynecology",
+    "address": "Government Medical College, Thiruvananthapuram",
+    "phone": "04712444270"
+},
+{
+    "name": "Dr. Bimal John",
+    "department": "Gynaecology",
+    "address": "Credence Hospital, Near Ulloor Bridge, Trivandrum",
+    "phone": "04712447692"
+},
+{
+    "name": "Dr. Chitra Sureshkumar",
+    "department": "Obstetrics & Gynaecology",
+    "address": "PRS Hospital, Killippalam, Karamana, Trivandrum",
+    "phone": "04712344443"
+},
+  {
+    "name": "Dr. Pramod A T",
+    "department": "Orthopaedic Surgery",
+    "address": "PRS Hospital, Killippalam, Karamana, Trivandrum",
+    "phone": "04712344443"
+},
+{
+    "name": "Dr. Rajesh K",
+    "department": "Orthopaedics",
+    "address": "PRS Hospital, Killippalam, Karamana, Trivandrum",
+    "phone": "04712344443"
+},
+{
+    "name": "Dr. Kaizar Ennis E",
+    "department": "Orthopaedic Surgery",
+    "address": "Neyyar Medicity, Neyyattinkara, Trivandrum",
+    "phone": "04712525777"
+},
+  {
+    "name": "Dr. S.R. Chandra",
+    "department": "Neurology",
+    "address": "SK Hospital, Edapazhinji, Pangode, Trivandrum",
+    "phone": "04712944444"
+},
+{
+    "name": "Dr. Syamlal S",
+    "department": "Neurology",
+    "address": "KIMSHEALTH, Anayara P.O, Trivandrum",
+    "phone": "04712941000"
+},
+{
+    "name": "Dr. Anish L",
+    "department": "Neurology",
+    "address": "SK Hospital, Edapazhinji, Pangode, Trivandrum",
+    "phone": "04712944444"
+},
+  {
+    "name": "Dr. Harihara Subramonia Sharma T S",
+    "department": "Cardiology",
+    "address": "Neyyar Medicity, Neyyattinkara, Trivandrum",
+    "phone": "04712525777"
+},
+{
+    "name": "Dr. K Suresh",
+    "department": "Cardiology",
+    "address": "SK Hospital, Edapazhinji, Pangode, Trivandrum",
+    "phone": "04712944444"
+},
+{
+    "name": "Dr. Mahadevan",
+    "department": "Cardiology",
+    "address": "Total Cardiac Care, Opp Medical College H.S School, Kumarapuram, Trivandrum",
+    "phone": "04712554545"
+},
+  {
     "name": "Dr. Antony Unni Xavier",
     "department": "General Medicine",
     "address": "St Francis Medicare, Vallakkadavu, Trivandrum",

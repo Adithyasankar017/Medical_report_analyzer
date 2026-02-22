@@ -1,6 +1,90 @@
 const kochiData = {
   doctors: [
   {
+    "name": "Dr. Akash Thomas Oommen",
+    "department": "General Medicine",
+    "address": "Amrita Hospital, Ponekkara, AIMS P.O, Kochi",
+    "phone": "04842851234"
+},
+{
+    "name": "Dr. Amita S Alumkara",
+    "department": "General Medicine",
+    "address": "General Hospital Ernakulam, Hospital Rd, Marine Drive, Kochi",
+    "phone": "04842360051"
+},
+  {
+    "name": "Dr. Hafeez Rahman",
+    "department": "Gynaecology (Laparoscopy)",
+    "address": "Sunrise Hospital, Seaport-Airport Road, Kakkanad, Kochi",
+    "phone": "04844160000"
+},
+{
+    "name": "Dr. Zubaida Sayeed",
+    "department": "Obstetrics & Gynaecology",
+    "address": "Specialist Hospital, North Railway Station Road, Kochi",
+    "phone": "04842392945"
+},
+{
+    "name": "Dr. Sobha S Nair",
+    "department": "Obstetrics & Gynaecology",
+    "address": "Amrita Hospital, Ponekkara, AIMS P.O, Kochi",
+    "phone": "04842851234"
+},
+  {
+    "name": "Dr. Vijaya Mohan S",
+    "department": "Orthopaedic Surgery",
+    "address": "Aster Medcity, Kuttisahib Road, South Chittoor, Kochi",
+    "phone": "04846699999"
+},
+{
+    "name": "Dr. Jai Thilak",
+    "department": "Orthopaedics",
+    "address": "Amrita Hospital, Ponekkara, AIMS P.O, Kochi",
+    "phone": "04842851234"
+},
+{
+    "name": "Dr. Rajesh Simon",
+    "department": "Orthopaedics",
+    "address": "Lakshmi Hospital, Diwans Road, Kochi",
+    "phone": "04842367223"
+},
+  {
+    "name": "Dr. Boby Varkey Maramattom",
+    "department": "Neurology",
+    "address": "Aster Medcity, Kuttisahib Road, South Chittoor, Kochi",
+    "phone": "04846699999"
+},
+{
+    "name": "Dr. Vivek Nambiar",
+    "department": "Neurology",
+    "address": "Amrita Hospital, Ponekkara, AIMS P.O, Kochi",
+    "phone": "04842851234"
+},
+{
+    "name": "Dr. Joy M A",
+    "department": "Neurology",
+    "address": "Apollo Adlux Hospital, Karukutty, Angamaly, Kochi",
+    "phone": "04842735000"
+},
+  {
+    "name": "Dr. Manoj P Nair",
+    "department": "Cardiology",
+    "address": "Aster Medcity, Kuttisahib Road, South Chittoor, Kochi",
+    "phone": "04846699999"
+},
+{
+    "name": "Dr. Jacob Joseph",
+    "department": "Cardiology",
+    "address": "Lisie Hospital, Lisie Hospital Road, Kaloor, Kochi",
+    "phone": "04842402044"
+},
+{
+    "name": "Dr. George Thayil",
+    "department": "Cardiology",
+    "address": "Lourdes Hospital, Pachalam, Kochi",
+    "phone": "04842393720"
+},
+  {
     "name": "Dr. Joby Abraham",
     "department": "Laparoscopic Surgery",
     "address": "Ernakulam Medical Centre, Palarivattom, Kochi",
